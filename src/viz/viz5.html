@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Prerequisite Graph</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b12;
+    --surface: #0e1119;
+    --surface2: #131720;
+    --border: #1c2235;
+    --accent: #38bdf8;
+    --accent2: #fb923c;
+    --accent3: #a78bfa;
+    --green: #34d399;
+    --text: #d8e0f0;
+    --text-muted: #4a5568;
+    --glow: 0 0 16px rgba(56,189,248,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Syne', sans-serif;
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image: linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),
+                      linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  header {
+    position:relative; z-index:10;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,11,18,0.96);
+    backdrop-filter: blur(16px);
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; min-height:48px;
+  }
+  .logo { font-size:.95rem; font-weight:800; letter-spacing:-.02em; color:var(--accent); text-shadow:var(--glow); white-space:nowrap; }
+  .logo span { color:var(--text-muted); font-weight:400; }
+  .sep { width:1px; height:22px; background:var(--border); flex-shrink:0; }
+  .controls { display:flex; gap:7px; align-items:center; flex-wrap:wrap; flex:1; }
+
+  .btn {
+    font-family:'JetBrains Mono',monospace; font-size:.65rem; font-weight:600;
+    padding:4px 10px; border:1px solid var(--border); background:var(--surface);
+    color:var(--text); cursor:pointer; transition:all .15s;
+    letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; line-height:1.4;
+  }
+  .btn:hover { border-color:var(--accent); color:var(--accent); box-shadow:var(--glow); }
+  .btn.on  { border-color:var(--accent); color:var(--accent); background:rgba(56,189,248,.07); }
+  .btn.warn { border-color:var(--accent2); color:var(--accent2); }
+  .btn.warn.on { background:rgba(251,146,60,.07); }
+
+  select, .srch {
+    font-family:'JetBrains Mono',monospace; font-size:.65rem;
+    padding:4px 8px; background:var(--surface); border:1px solid var(--border);
+    color:var(--text); outline:none; transition:border-color .15s; cursor:pointer;
+  }
+  select:focus,.srch:focus { border-color:var(--accent); }
+  .srch { cursor:text; width:140px; }
+  .srch::placeholder { color:var(--text-muted); }
+
+  .chips { display:flex; gap:5px; margin-left:auto; }
+  .chip {
+    font-family:'JetBrains Mono',monospace; font-size:.6rem;
+    padding:2px 7px; border:1px solid var(--border); color:var(--text-muted); background:var(--surface);
+  }
+  .chip strong { color:var(--accent); }
+
+  /* ── Canvas area ─────────────────────────────────────────── */
+  #wrap { flex:1; position:relative; z-index:1; }
+  #cy   { width:100%; height:100%; }
+
+  /* ── Drop screen ─────────────────────────────────────────── */
+  #drop {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; z-index:20; gap:16px; background:var(--bg);
+  }
+  .dbox {
+    border:2px dashed var(--border); padding:48px 68px; text-align:center;
+    transition:all .3s; cursor:pointer;
+  }
+  .dbox:hover,.dbox.over { border-color:var(--accent); box-shadow:var(--glow),inset 0 0 36px rgba(56,189,248,.04); }
+  .dico { font-size:2.2rem; margin-bottom:12px; opacity:.3; }
+  .dtitle { font-size:1.25rem; font-weight:700; margin-bottom:5px; }
+  .dsub { font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--text-muted); margin-bottom:16px; }
+  #finput { display:none; }
+  .ordiv { font-family:'JetBrains Mono',monospace; font-size:.65rem; color:var(--text-muted); letter-spacing:.1em; }
+
+  /* ── Loading ─────────────────────────────────────────────── */
+  #loading {
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(8,11,18,.88); z-index:50; flex-direction:column; gap:12px;
+  }
+  .lrow { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--accent); letter-spacing:.1em; display:flex; align-items:center; gap:9px; }
+  .spin { width:16px; height:16px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* ── Error ───────────────────────────────────────────────── */
+  #err {
+    display:none; position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    z-index:100; background:#2a0808; border:1px solid #ef4444; color:#fca5a5;
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; padding:8px 16px; max-width:460px; text-align:center;
+  }
+
+  /* ── Tooltip ─────────────────────────────────────────────── */
+  #tip {
+    position:fixed; display:none; z-index:200;
+    background:var(--surface2); border:1px solid var(--accent);
+    padding:12px 14px; max-width:300px; box-shadow:var(--glow); pointer-events:none;
+  }
+  .tc  { font-family:'JetBrains Mono',monospace; font-size:.65rem; color:var(--accent); margin-bottom:3px; }
+  .tt  { font-size:.84rem; font-weight:700; margin-bottom:6px; line-height:1.25; }
+  .td  { font-size:.68rem; color:var(--text-muted); line-height:1.45; margin-bottom:8px; }
+  .tm  { display:flex; gap:5px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:.62rem; }
+  .tg  { padding:2px 5px; border:1px solid var(--border); color:var(--text-muted); }
+  .tg.u{ border-color:rgba(167,139,250,.5); color:#c4b5fd; }
+  .tg.r{ border-color:rgba(56,189,248,.35); color:var(--accent); }
+  .tg.p{ border-color:rgba(167,139,250,.4); color:#a78bfa; }
+
+  /* prereq group info in tooltip */
+  .tp { margin-top:6px; font-size:.65rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace; border-top:1px solid var(--border); padding-top:6px; }
+  .tp strong { color:var(--text); }
+
+  /* ── Legend ──────────────────────────────────────────────── */
+  #legend {
+    position:fixed; bottom:14px; left:14px; z-index:50;
+    background:rgba(14,17,25,.97); border:1px solid var(--border);
+    padding:12px 14px; display:none; max-height:56vh; overflow-y:auto; min-width:140px;
+  }
+  .ltitle { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+  .li { display:flex; align-items:center; gap:6px; margin-bottom:4px; font-size:.7rem; color:var(--text-muted); }
+  .ld { width:9px; height:9px; flex-shrink:0; }
+
+  /* ── OR group pill overlay ───────────────────────────────── */
+  /* drawn via canvas extension — just style the tooltip content */
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COURSE<span>GRAPH</span></div>
+  <div class="sep"></div>
+  <div class="controls" id="ctrl" style="display:none">
+    <input class="srch" id="search" placeholder="Search…" oninput="doSearch(this.value)">
+    <select id="dsel" onchange="doFilter()">
+      <option value="">All Depts</option>
+    </select>
+    <div class="sep"></div>
+    <button class="btn warn" id="bspec" onclick="toggleSpecial()">Hide Special</button>
+    <button class="btn" id="bphantom" onclick="togglePhantom()">Hide External</button>
+    <div class="sep"></div>
+    <button class="btn on"  id="btier"  onclick="setLayout('tier')">Tiered</button>
+    <button class="btn"     id="bforce" onclick="setLayout('force')">Force</button>
+    <button class="btn"     id="bgrid"  onclick="setLayout('grid')">Grid</button>
+    <div class="sep"></div>
+    <label style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-muted);white-space:nowrap">
+      SPREAD <input type="range" id="spread" min="100" max="420" value="200" style="width:60px;vertical-align:middle;margin-left:3px" oninput="onSpread(this.value)">
+    </label>
+    <div class="sep"></div>
+    <button class="btn on" onclick="cy&&cy.animate({fit:{padding:40},duration:300})">Fit</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+    <button class="btn" onclick="reloadUI()">Load New</button>
+  </div>
+  <div class="chips" id="chips" style="display:none">
+    <div class="chip"><strong id="sn">0</strong> courses</div>
+    <div class="chip"><strong id="se">0</strong> edges</div>
+    <div class="chip"><strong id="st">0</strong> tiers</div>
+  </div>
+</header>
+
+<div id="wrap">
+  <!-- drop -->
+  <div id="drop">
+    <div class="dbox" id="dbox"
+         onclick="document.getElementById('finput').click()"
+         ondragover="event.preventDefault();this.classList.add('over')"
+         ondragleave="this.classList.remove('over')"
+         ondrop="onDrop(event)">
+      <div class="dico">⬡</div>
+      <div class="dtitle">Drop your JSON file here</div>
+      <div class="dsub">University course schema • prereqs.required = AND-of-ORs</div>
+      <button class="btn on" onclick="event.stopPropagation();document.getElementById('finput').click()">Browse File</button>
+    </div>
+    <div class="ordiv">— OR —</div>
+    <button class="btn" onclick="loadDemo()">Load Sample Graph</button>
+    <input type="file" id="finput" accept=".json" onchange="onFile(this)">
+  </div>
+  <!-- loading -->
+  <div id="loading"><div class="lrow"><div class="spin"></div><span id="lmsg">BUILDING…</span></div></div>
+  <!-- error -->
+  <div id="err"></div>
+  <!-- graph -->
+  <div id="cy"></div>
+</div>
+
+<!-- tooltip -->
+<div id="tip">
+  <div class="tc" id="tc"></div>
+  <div class="tt" id="tt"></div>
+  <div class="td" id="td"></div>
+  <div class="tm">
+    <span class="tg u" id="tu"></span>
+    <span class="tg r" id="tr"></span>
+    <span class="tg p" id="tp2"></span>
+  </div>
+  <div class="tp" id="tpreqs"></div>
+</div>
+
+<!-- legend -->
+<div id="legend">
+  <div class="ltitle">Departments</div>
+  <div id="ldepts"></div>
+  <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+    <div class="li"><div style="width:20px;height:2px;background:rgba(56,189,248,.75)"></div><span>Required prereq</span></div>
+    <div class="li"><div style="width:20px;height:0;border-top:2px dashed rgba(251,146,60,.8)"></div><span>Concurrent (or prior)</span></div>
+    <div class="li"><div style="width:20px;height:2px;background:rgba(148,163,184,.25)"></div><span>OR-alternative</span></div>
+    <div class="li" style="margin-top:4px"><div class="ld" style="border:1px dashed rgba(251,191,36,.6)"></div><span>Special topics</span></div>
+    <div class="li"><div class="ld" style="border:1px dashed rgba(148,163,184,.4)"></div><span>External dept</span></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════
+let cy = null, rawData = null;
+let curLayout = 'tier', spreadVal = 200;
+let hideSpecial = false, hidePhantom = false;
+
+const DEPT_COLORS = [
+  '#38bdf8','#fb923c','#a78bfa','#34d399','#fbbf24',
+  '#f472b6','#60a5fa','#a3e635','#f97316','#22d3ee',
+  '#818cf8','#f87171','#2dd4bf','#e879f9','#4ade80',
+  '#facc15','#fb7185','#67e8f9','#86efac','#c084fc'
+];
+let dmap = {};
+function dc(d){ if(!dmap[d]) dmap[d]=DEPT_COLORS[Object.keys(dmap).length%DEPT_COLORS.length]; return dmap[d]; }
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+function courseNum(code){
+  const m=code.match(/(\d+)/);
+  return m?parseInt(m[1]):500;
+}
+function isSpecial(code){
+  const n=courseNum(code);
+  return (n>=90&&n<=99)||(n>=190&&n<=199);
+}
+function isPhantomId(id){ return id.startsWith('__phantom__'); }
+function phantomId(code){ return '__phantom__'+code; }
+
+// Map course number → tier band (baseline before graph relaxation)
+function numToBaseTier(n){
+  if(n<10)  return 0;
+  if(n<30)  return 1;
+  if(n<60)  return 2;
+  if(n<100) return 3;
+  if(n<130) return 4;
+  if(n<160) return 5;
+  if(n<190) return 6;
+  return 7;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RANKING  — longest-path topological rank, seeded by course numbers
+// ═══════════════════════════════════════════════════════════
+function computeRanks(nodes, requiredEdges){
+  // nodes: [{id, code}]  requiredEdges: [{source, target}]
+  const rank={}, children={}, parents={};
+  nodes.forEach(n=>{ rank[n.id]=numToBaseTier(courseNum(n.code)); children[n.id]=[]; parents[n.id]=[]; });
+  requiredEdges.forEach(e=>{
+    if(children[e.source]&&parents[e.target]){
+      children[e.source].push(e.target);
+      parents[e.target].push(e.source);
+    }
+  });
+
+  // Iterative relaxation: rank[v] = max(rank[u]+1) for all u->v
+  // Run until stable (handles the numeric seed + graph constraint)
+  let changed=true, iter=0;
+  while(changed && iter++<100){
+    changed=false;
+    nodes.forEach(n=>{
+      parents[n.id].forEach(p=>{
+        const want=rank[p]+1;
+        if(want>rank[n.id]){ rank[n.id]=want; changed=true; }
+      });
+    });
+  }
+  return rank;
+}
+
+// ═══════════════════════════════════════════════════════════
+// POSITION — tier layout
+// ═══════════════════════════════════════════════════════════
+function tierPositions(cyNodes, rankMap, spread){
+  const NW=78, NH=30, HGAP=spread, VGAP=Math.max(85,spread*0.52);
+  // group by rank
+  const tiers={};
+  cyNodes.forEach(n=>{
+    const r=rankMap[n.id()]??0;
+    (tiers[r]=tiers[r]||[]).push(n);
+  });
+  const pos={};
+  Object.keys(tiers).map(Number).sort((a,b)=>a-b).forEach(r=>{
+    const row=tiers[r].sort((a,b)=>{
+      // Sort within tier: dept first, then course number
+      const da=a.data('dept'), db=b.data('dept');
+      if(da!==db) return da.localeCompare(db);
+      return courseNum(a.data('label'))-courseNum(b.data('label'));
+    });
+    const totalW=row.length*(NW+HGAP)-HGAP;
+    row.forEach((n,i)=>{ pos[n.id()]={ x:-totalW/2+i*(NW+HGAP)+NW/2, y:r*VGAP }; });
+  });
+  return pos;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILE I/O
+// ═══════════════════════════════════════════════════════════
+function onDrop(e){ e.preventDefault(); document.getElementById('dbox').classList.remove('over'); const f=e.dataTransfer.files[0]; if(f) readFile(f); }
+function onFile(inp){ if(inp.files[0]) readFile(inp.files[0]); }
+function readFile(f){ const r=new FileReader(); r.onload=e=>{ try{ buildGraph(JSON.parse(e.target.result)); }catch(ex){ showErr('Invalid JSON: '+ex.message); } }; r.readAsText(f); }
+function reloadUI(){ document.getElementById('drop').style.display='flex'; ['ctrl','chips','legend'].forEach(id=>document.getElementById(id).style.display='none'); }
+
+function showLoad(m){ document.getElementById('lmsg').textContent=m||'BUILDING…'; document.getElementById('loading').style.display='flex'; }
+function hideLoad(){ document.getElementById('loading').style.display='none'; }
+function showErr(m){ const b=document.getElementById('err'); b.textContent='⚠ '+m; b.style.display='block'; setTimeout(()=>b.style.display='none',6000); hideLoad(); }
+
+// ═══════════════════════════════════════════════════════════
+// DEMO DATA
+// ═══════════════════════════════════════════════════════════
+function loadDemo(){
+  buildGraph({courses:[
+    {id:'MATH 2A',code:'MATH 2A',title:'Calculus, First Course',department:'MATH',units:4,description:'Limits, differentiation, and integration of functions of one variable.',prereqs:{required:[],concurrent:[]}},
+    {id:'MATH 2B',code:'MATH 2B',title:'Calculus, Second Course',department:'MATH',units:4,description:'Techniques and applications of integration, series.',prereqs:{required:[['MATH 2A']],concurrent:[]}},
+    {id:'MATH 3A',code:'MATH 3A',title:'Calculus with Applications',department:'MATH',units:4,description:'Derivatives, integrals and their applications.',prereqs:{required:[],concurrent:[]}},
+    {id:'MATH 3B',code:'MATH 3B',title:'Calculus, Further Topics',department:'MATH',units:4,description:'Integration and sequences.',prereqs:{required:[['MATH 3A']],concurrent:[]}},
+    {id:'MATH 4A',code:'MATH 4A',title:'Linear Algebra with Applications',department:'MATH',units:4,description:'Matrices, determinants, linear equations.',prereqs:{required:[['MATH 2A','MATH 3A']],concurrent:[]}},
+    {id:'MATH 4B',code:'MATH 4B',title:'Differential Equations',department:'MATH',units:4,description:'First and second order ODEs.',prereqs:{required:[['MATH 4A']],concurrent:[]}},
+    {id:'MATH 6A',code:'MATH 6A',title:'Mathematics for Computation',department:'MATH',units:4,description:'Discrete math, logic, sets, proof techniques.',prereqs:{required:[],concurrent:[]}},
+    {id:'MATH 8',code:'MATH 8',title:'Transitions to Higher Math',department:'MATH',units:4,description:'Logic, proof writing, sets, functions, cardinality.',prereqs:{required:[['MATH 2B','MATH 3B']],concurrent:[]}},
+    {id:'MATH 108A',code:'MATH 108A',title:'Abstract Algebra I',department:'MATH',units:4,description:'Groups, subgroups, homomorphisms.',prereqs:{required:[['MATH 8']],concurrent:[]}},
+    {id:'MATH 108B',code:'MATH 108B',title:'Abstract Algebra II',department:'MATH',units:4,description:'Rings, fields, Galois theory.',prereqs:{required:[['MATH 108A']],concurrent:[]}},
+    {id:'MATH 197B',code:'MATH 197B',title:'Mathematics Colloquium',department:'MATH',units:1,description:'Senior thesis and colloquium series.',prereqs:{required:[['MATH 108A']],concurrent:[]}},
+    {id:'CMPSC 8',code:'CMPSC 8',title:'Introduction to Computer Science',department:'CMPSC',units:4,description:'Python programming and problem-solving.',prereqs:{required:[],concurrent:[]}},
+    {id:'CMPSC 9',code:'CMPSC 9',title:'Intermediate Python',department:'CMPSC',units:4,description:'More Python: classes, recursion, data structures.',prereqs:{required:[['CMPSC 8']],concurrent:[]}},
+    {id:'CMPSC 16',code:'CMPSC 16',title:'Problem Solving I',department:'CMPSC',units:4,description:'C++ programming fundamentals.',prereqs:{required:[['CMPSC 8']],concurrent:[]}},
+    {id:'CMPSC 24',code:'CMPSC 24',title:'Problem Solving II',department:'CMPSC',units:4,description:'Data structures in C++.',prereqs:{required:[['CMPSC 16'],['MATH 3A','MATH 2A']],concurrent:[]}},
+    {id:'CMPSC 32',code:'CMPSC 32',title:'Object-Oriented Design',department:'CMPSC',units:4,description:'OOP patterns and design principles in C++.',prereqs:{required:[['CMPSC 24']],concurrent:[]}},
+    {id:'CMPSC 40',code:'CMPSC 40',title:'Foundations of Computer Science',department:'CMPSC',units:4,description:'Logic, automata, computability.',prereqs:{required:[['CMPSC 16'],['MATH 3B','MATH 2B']],concurrent:[]}},
+    {id:'CMPSC 64',code:'CMPSC 64',title:'Computer Organization',department:'CMPSC',units:4,description:'Architecture, assembly, memory.',prereqs:{required:[['CMPSC 16']],concurrent:[]}},
+    {id:'CMPSC 130A',code:'CMPSC 130A',title:'Data Structures and Algorithms',department:'CMPSC',units:4,description:'Hash tables, heaps, balanced BSTs, graph traversal.',prereqs:{required:[['CMPSC 40','MATH 8'],['CMPSC 24','CMPSC 9']],concurrent:[['PSTAT 120A','ECE 139']]}},
+    {id:'CMPSC 130B',code:'CMPSC 130B',title:'Algorithms',department:'CMPSC',units:4,description:'NP-completeness, approximation, dynamic programming.',prereqs:{required:[['CMPSC 130A']],concurrent:[]}},
+    {id:'CMPSC 160',code:'CMPSC 160',title:'Translation of Programming Languages',department:'CMPSC',units:4,description:'Compilers: lexing, parsing, code generation.',prereqs:{required:[['CMPSC 130A'],['CMPSC 64']],concurrent:[]}},
+    {id:'ECE 1A',code:'ECE 1A',title:'Introduction to EE',department:'ECE',units:2,description:'Survey of electrical engineering fields.',prereqs:{required:[],concurrent:[]}},
+    {id:'ECE 10A',code:'ECE 10A',title:'Circuits and Electronics',department:'ECE',units:4,description:'Basic circuit analysis, Kirchhoff laws.',prereqs:{required:[['MATH 4A'],['PHYS 4B']],concurrent:[]}},
+    {id:'ECE 130A',code:'ECE 130A',title:'Device Electronics I',department:'ECE',units:4,description:'Semiconductor physics and diode circuits.',prereqs:{required:[['ECE 10A'],['MATH 4B']],concurrent:[]}},
+    {id:'ECE 139',code:'ECE 139',title:'Probability and Statistics for Engineers',department:'ECE',units:4,description:'Random variables, distributions, estimation.',prereqs:{required:[['MATH 4A'],['MATH 2B','MATH 3B']],concurrent:[]}},
+    {id:'ECE 188C',code:'ECE 188C',title:'Special Topics: Machine Learning Systems',department:'ECE',units:4,description:'Deep learning architectures and deployment.',prereqs:{required:[['ECE 139'],['CMPSC 130A']],concurrent:[]}},
+    {id:'PSTAT 120A',code:'PSTAT 120A',title:'Probability and Statistics',department:'PSTAT',units:4,description:'Probability theory, distributions, inference.',prereqs:{required:[['MATH 2B','MATH 3B']],concurrent:[]}},
+  ]});
+}
+
+// ═══════════════════════════════════════════════════════════
+// BUILD GRAPH
+// ═══════════════════════════════════════════════════════════
+function buildGraph(data){
+  rawData=data; dmap={};
+  document.getElementById('drop').style.display='none';
+  showLoad('BUILDING GRAPH…');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    try{ _build(); }catch(ex){ showErr('Build failed: '+ex.message); console.error(ex); }
+  }));
+}
+
+function _build(){
+  let courses=(rawData.courses||[]);
+  if(!courses.length){ showErr('No courses found.'); return; }
+
+  // ── Apply filters ───────────────────────────────────────
+  if(hideSpecial) courses=courses.filter(c=>!isSpecial(c.code||c.id));
+
+  const knownIds=new Set(courses.map(c=>c.id));
+
+  // ── Collect all referenced external prereqs ─────────────
+  // For each prereq group, if a course isn't in our data, create a phantom node
+  const phantoms={}; // code -> phantom node data
+  courses.forEach(c=>{
+    const allGroups=[...(c.prereqs?.required||[]),...(c.prereqs?.concurrent||[])];
+    allGroups.forEach(group=>{
+      group.forEach(pid=>{
+        if(!knownIds.has(pid)&&!phantoms[pid]){
+          phantoms[pid]={
+            id:phantomId(pid), code:pid,
+            dept: pid.split(' ')[0],
+            title:'(external course)',
+            external:true,
+          };
+        }
+      });
+    });
+  });
+
+  // ── Build node list ─────────────────────────────────────
+  const allNodes=[
+    ...courses.map(c=>({ id:c.id, code:c.code||c.id, dept:c.department||'?', title:c.title||'', units:c.units||0, desc:c.description||'', special:isSpecial(c.code||c.id), external:false, rawPrereqs:c.prereqs })),
+    ...Object.values(phantoms).map(p=>({ id:p.id, code:p.code, dept:p.dept, title:'External', units:0, desc:'Referenced prerequisite not in this catalog.', special:false, external:true, rawPrereqs:{required:[],concurrent:[]} })),
+  ];
+  if(hidePhantom) allNodes.splice(allNodes.findIndex(n=>n.external),allNodes.filter(n=>n.external).length);
+
+  const nodeIdSet=new Set(allNodes.map(n=>n.id));
+
+  // ── Resolve prereq id → node id ─────────────────────────
+  // A prereqId might be in knownIds (real) or in phantoms (external)
+  function resolveId(pid){
+    if(nodeIdSet.has(pid)) return pid;
+    const ph=phantomId(pid);
+    if(nodeIdSet.has(ph)) return ph;
+    return null;
+  }
+
+  // ── Build edges ─────────────────────────────────────────
+  // For each AND-group: draw edges from EVERY course in the OR-group to the target.
+  // Primary edge (first/representative of OR group) gets full opacity;
+  // OR-alternatives get a muted style.
+  const edges=[];
+  const edgeSet=new Set();
+  courses.forEach(c=>{
+    const targetId=c.id;
+
+    // REQUIRED groups
+    (c.prereqs?.required||[]).forEach((group,gi)=>{
+      group.forEach((pid,pi)=>{
+        const src=resolveId(pid);
+        if(!src) return;
+        const eid=`req:${src}->${targetId}:g${gi}`;
+        if(edgeSet.has(eid)) return; edgeSet.add(eid);
+        edges.push({ id:eid, source:src, target:targetId,
+          etype:'required',
+          orPrimary: pi===0,   // first in OR-group is "primary"
+          orGroup: gi,
+          orSize: group.length,
+        });
+      });
+    });
+
+    // CONCURRENT groups
+    (c.prereqs?.concurrent||[]).forEach((group,gi)=>{
+      group.forEach((pid,pi)=>{
+        const src=resolveId(pid);
+        if(!src) return;
+        const eid=`conc:${src}->${targetId}:g${gi}`;
+        if(edgeSet.has(eid)) return; edgeSet.add(eid);
+        edges.push({ id:eid, source:src, target:targetId,
+          etype:'concurrent',
+          orPrimary: pi===0,
+          orGroup: gi,
+          orSize: group.length,
+        });
+      });
+    });
+  });
+
+  // ── Compute ranks ────────────────────────────────────────
+  const reqEdgesForRank=edges
+    .filter(e=>e.etype==='required')
+    .map(e=>({source:e.source,target:e.target}));
+  const ranks=computeRanks(allNodes, reqEdgesForRank);
+  const maxTier=Math.max(0,...Object.values(ranks));
+
+  // ── Departments ──────────────────────────────────────────
+  const depts=[...new Set(allNodes.map(n=>n.dept))].sort();
+  depts.forEach(d=>dc(d));
+
+  // ── Dept filter select ───────────────────────────────────
+  const sel=document.getElementById('dsel');
+  const prev=sel.value;
+  sel.innerHTML='<option value="">All Depts</option>';
+  depts.filter(d=>!hidePhantom||courses.some(c=>c.department===d))
+       .forEach(d=>{ const o=document.createElement('option'); o.value=d; o.textContent=d; sel.appendChild(o); });
+  sel.value=depts.includes(prev)?prev:'';
+
+  // ── Legend ───────────────────────────────────────────────
+  document.getElementById('ldepts').innerHTML=depts.map(d=>
+    `<div class="li"><div class="ld" style="background:${dc(d)}"></div><span>${d}</span></div>`
+  ).join('');
+
+  // ── Stats ────────────────────────────────────────────────
+  document.getElementById('sn').textContent=courses.length+(hidePhantom?'':'+'+Object.keys(phantoms).length);
+  document.getElementById('se').textContent=edges.length;
+  document.getElementById('st').textContent=maxTier+1;
+
+  // ── Destroy old ──────────────────────────────────────────
+  if(cy){ try{cy.destroy();}catch(e){} cy=null; }
+
+  // ── Cytoscape elements ───────────────────────────────────
+  const elements=[];
+  allNodes.forEach(n=>{
+    elements.push({ data:{
+      id: n.id,
+      label: n.code,
+      title: n.title,
+      dept: n.dept,
+      units: n.units,
+      desc: n.desc,
+      rank: ranks[n.id]??0,
+      external: n.external?'yes':'no',
+      special: n.special?'yes':'no',
+      rawPrereqs: n.rawPrereqs,
+    }});
+  });
+  edges.forEach(e=>{
+    elements.push({ data:{
+      id: e.id, source: e.source, target: e.target,
+      etype: e.etype,
+      orPrimary: e.orPrimary?'yes':'no',
+      orSize: e.orSize,
+    }});
+  });
+
+  // ── Styles ───────────────────────────────────────────────
+  const deptStyles=depts.map(d=>({
+    selector:`node[dept="${d}"]`,
+    style:{'background-color':dc(d)}
+  }));
+
+  cy=cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style:[
+      // ── Base node ──
+      {
+        selector:'node',
+        style:{
+          'label':'data(label)',
+          'font-family':'JetBrains Mono, monospace',
+          'font-size':'8.5px', 'font-weight':'700',
+          'color':'#080b12',
+          'text-valign':'center','text-halign':'center',
+          'width':'label','height':'label','padding':'6px 9px',
+          'shape':'round-rectangle',
+          'border-width':0,
+          'background-color':'#334155',
+        }
+      },
+      ...deptStyles,
+      // External (phantom) nodes — ghost style
+      {
+        selector:'node[external="yes"]',
+        style:{
+          'background-color':'transparent',
+          'border-width':1.5,
+          'border-style':'dashed',
+          'border-color':'rgba(148,163,184,.45)',
+          'color':'rgba(148,163,184,.7)',
+          'font-size':'8px',
+        }
+      },
+      // Special topics — amber dashed border
+      {
+        selector:'node[special="yes"]',
+        style:{
+          'border-width':1.5,
+          'border-style':'dashed',
+          'border-color':'rgba(251,191,36,.65)',
+        }
+      },
+      // Highlight / fade
+      {selector:'node.hi', style:{'border-width':2.5,'border-color':'#fff','border-style':'solid','z-index':10,'opacity':1}},
+      {selector:'node.fa', style:{'opacity':.1}},
+      // ── Base edge ──
+      {
+        selector:'edge',
+        style:{
+          'width':1.3,
+          'curve-style':'bezier',
+          'target-arrow-shape':'triangle',
+          'arrow-scale':.75,
+          'line-color':'rgba(56,189,248,.55)',
+          'target-arrow-color':'rgba(56,189,248,.55)',
+        }
+      },
+      // Required primary
+      {
+        selector:'edge[etype="required"][orPrimary="yes"]',
+        style:{
+          'line-color':'rgba(56,189,248,.65)',
+          'target-arrow-color':'rgba(56,189,248,.65)',
+          'width':1.5,
+        }
+      },
+      // Required OR-alternative — muted
+      {
+        selector:'edge[etype="required"][orPrimary="no"]',
+        style:{
+          'line-color':'rgba(148,163,184,.28)',
+          'target-arrow-color':'rgba(148,163,184,.28)',
+          'width':1,
+          'line-style':'dotted',
+        }
+      },
+      // Concurrent primary
+      {
+        selector:'edge[etype="concurrent"][orPrimary="yes"]',
+        style:{
+          'line-style':'dashed',
+          'line-dash-pattern':[5,3],
+          'line-color':'rgba(251,146,60,.65)',
+          'target-arrow-color':'rgba(251,146,60,.65)',
+        }
+      },
+      // Concurrent OR-alternative
+      {
+        selector:'edge[etype="concurrent"][orPrimary="no"]',
+        style:{
+          'line-style':'dotted',
+          'line-color':'rgba(251,146,60,.25)',
+          'target-arrow-color':'rgba(251,146,60,.25)',
+          'width':1,
+        }
+      },
+      // Highlighted edge
+      {selector:'edge.hi', style:{'width':2.2,'z-index':5,'opacity':1}},
+      {selector:'edge[etype="required"].hi',   style:{'line-color':'rgba(56,189,248,.95)','target-arrow-color':'rgba(56,189,248,.95)','line-style':'solid'}},
+      {selector:'edge[etype="concurrent"].hi', style:{'line-color':'rgba(251,146,60,.95)','target-arrow-color':'rgba(251,146,60,.95)'}},
+      {selector:'edge.fa', style:{'opacity':.04}},
+    ],
+    layout:{name:'preset',positions:{}},
+    wheelSensitivity:.25, minZoom:.03, maxZoom:5,
+    textureOnViewport:allNodes.length>200,
+    hideEdgesOnViewport:allNodes.length>300,
+    motionBlur:false,
+  });
+
+  // Apply tier layout
+  _applyTier(false);
+
+  // Interactions
+  _attachEvents();
+
+  hideLoad();
+  document.getElementById('ctrl').style.display='flex';
+  document.getElementById('chips').style.display='flex';
+  document.getElementById('legend').style.display='block';
+  if(sel.value) doFilter();
+}
+
+// ═══════════════════════════════════════════════════════════
+// LAYOUT
+// ═══════════════════════════════════════════════════════════
+function _rankMap(){
+  const m={};
+  cy.nodes().forEach(n=>{ m[n.id()]=n.data('rank')||0; });
+  return m;
+}
+
+function _applyTier(anim){
+  if(!cy) return;
+  const visible=cy.nodes(':visible');
+  const pos=tierPositions(visible,_rankMap(),spreadVal);
+  if(anim){
+    visible.forEach(n=>n.animate({position:pos[n.id()]||{x:0,y:0},duration:320,easing:'ease-out-cubic'}));
+    setTimeout(()=>cy.fit(cy.elements(':visible'),40),360);
+  } else {
+    visible.forEach(n=>n.position(pos[n.id()]||{x:0,y:0}));
+    cy.fit(cy.elements(':visible'),40);
+  }
+}
+
+function setLayout(name){
+  curLayout=name;
+  ['tier','force','grid'].forEach(l=>document.getElementById('b'+l).classList.toggle('on',l===name));
+  if(!cy) return;
+  showLoad('COMPUTING LAYOUT…');
+  setTimeout(()=>{
+    try{
+      if(name==='tier'){ _applyTier(true); hideLoad(); return; }
+      cy.layout({
+        name: name==='force'?'cose':'grid',
+        animate:false, padding:50,
+        ...(name==='force'?{idealEdgeLength:90,nodeRepulsion:7000,gravity:.3,numIter:500}:{}),
+        ...(name==='grid'?{avoidOverlap:true,spacingFactor:1.25}:{}),
+      }).run();
+    }catch(e){ showErr('Layout error: '+e.message); }
+    finally{ hideLoad(); }
+  },60);
+}
+
+function onSpread(v){ spreadVal=parseInt(v); if(curLayout==='tier'&&cy) _applyTier(true); }
+
+// ═══════════════════════════════════════════════════════════
+// FILTER / SEARCH
+// ═══════════════════════════════════════════════════════════
+function toggleSpecial(){
+  hideSpecial=!hideSpecial;
+  const b=document.getElementById('bspec');
+  b.textContent=hideSpecial?'Show Special':'Hide Special';
+  b.classList.toggle('on',hideSpecial);
+  if(rawData){ showLoad('REBUILDING…'); requestAnimationFrame(()=>requestAnimationFrame(()=>{try{_build();}catch(e){showErr(e.message);}})); }
+}
+function togglePhantom(){
+  hidePhantom=!hidePhantom;
+  const b=document.getElementById('bphantom');
+  b.textContent=hidePhantom?'Show External':'Hide External';
+  b.classList.toggle('on',hidePhantom);
+  if(rawData){ showLoad('REBUILDING…'); requestAnimationFrame(()=>requestAnimationFrame(()=>{try{_build();}catch(e){showErr(e.message);}})); }
+}
+
+function doFilter(){
+  if(!cy) return;
+  cy.elements().removeClass('hi fa');
+  const dept=document.getElementById('dsel').value;
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  if(!dept&&!q) return;
+
+  let match=cy.nodes();
+  if(dept)  match=match.filter(`[dept="${dept}"]`);
+  if(q)     match=match.filter(n=>n.data('label').toLowerCase().includes(q)||n.data('title').toLowerCase().includes(q));
+
+  if(!match.length) return;
+  const keep=match.closedNeighborhood();
+  cy.elements().not(keep).addClass('fa');
+  keep.addClass('hi');
+}
+
+function doSearch(v){ doFilter(); }
+
+function resetAll(){
+  if(!cy) return;
+  cy.elements().removeClass('hi fa');
+  document.getElementById('dsel').value='';
+  document.getElementById('search').value='';
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOOLTIP CONTENT
+// ═══════════════════════════════════════════════════════════
+function buildPrereqHTML(rawPrereqs){
+  if(!rawPrereqs) return '';
+  const lines=[];
+  const req=rawPrereqs.required||[];
+  const conc=rawPrereqs.concurrent||[];
+  if(req.length){
+    lines.push('<strong>Requires (AND):</strong>');
+    req.forEach((g,i)=>{
+      lines.push(`  ${i+1}. ${g.join(' OR ')}`);
+    });
+  }
+  if(conc.length){
+    lines.push('<strong>Concurrent (AND):</strong>');
+    conc.forEach((g,i)=>{
+      lines.push(`  ${i+1}. ${g.join(' OR ')}`);
+    });
+  }
+  return lines.join('<br>');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+function _attachEvents(){
+  const tip=document.getElementById('tip');
+
+  cy.on('mouseover','node',e=>{
+    const d=e.target.data();
+    document.getElementById('tc').textContent=d.label;
+    document.getElementById('tt').textContent=d.title;
+    document.getElementById('td').textContent=d.desc.length>155?d.desc.slice(0,155)+'…':d.desc;
+    document.getElementById('tu').textContent=d.units+' unit'+(d.units!==1?'s':'');
+    document.getElementById('tr').textContent='tier '+(d.rank+1);
+    document.getElementById('tp2').textContent=d.external==='yes'?'external':'dept: '+d.dept;
+    document.getElementById('tpreqs').innerHTML=buildPrereqHTML(d.rawPrereqs);
+    tip.style.display='block';
+  });
+  cy.on('mousemove','node',e=>{
+    tip.style.left=(e.originalEvent.clientX+16)+'px';
+    tip.style.top=(e.originalEvent.clientY-10)+'px';
+  });
+  cy.on('mouseout','node',()=>{ tip.style.display='none'; });
+
+  // Click: highlight full ancestor + descendant chain
+  cy.on('tap','node',e=>{
+    tip.style.display='none';
+    cy.elements().removeClass('hi fa');
+    const n=e.target;
+    const chain=n.union(n.predecessors()).union(n.successors());
+    cy.elements().not(chain).addClass('fa');
+    chain.addClass('hi');
+  });
+
+  cy.on('tap',e=>{
+    if(e.target===cy){
+      cy.elements().removeClass('hi fa');
+      const d=document.getElementById('dsel').value, q=document.getElementById('search').value.trim();
+      if(d||q) doFilter();
+    }
+  });
+
+  cy.on('dblclick','node',e=>{
+    const url=e.target.data('url');
+    if(url&&url!=='#') window.open(url,'_blank');
+  });
+}
+</script>
+</body>
+</html>

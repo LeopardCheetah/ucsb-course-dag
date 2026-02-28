@@ -1,0 +1,4373 @@
+{
+  "meta": {
+    "departments": [
+      "CMPSC",
+      "ECE",
+      "MATH"
+    ],
+    "total_courses": 263,
+    "description": "Visualization-ready course graph data. Each course is a node; prerequisite edges are encoded in prereqs.required (AND-of-OR-groups) and prereqs.concurrent."
+  },
+  "courses": [
+    {
+      "id": "CMPSC 1",
+      "code": "CMPSC 1",
+      "title": "Seminar on the Field of Computer Science",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "Overviews the potential of, and opportunities available from, the field of computer science. Topics include an overview of how computers work and the interesting ways in which computers can be applied to solve important and high-impact technological, social, and cutting-edge research problems.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%201"
+    },
+    {
+      "id": "CMPSC 2",
+      "code": "CMPSC 2",
+      "title": "Computational Thinking for Scientists",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to the central concepts of computer science as they apply to a wide variety of human endeavors, including natural and physical sciences. Topics that interrelate central ideas from algorithms, performance and complexity, data structures, concurrency, languages and abstractions will be studied.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%202"
+    },
+    {
+      "id": "CMPSC 4",
+      "code": "CMPSC 4",
+      "title": "Computer Science Boot Camp",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "An introduction to computational thinking, computing, data management, and problem solving using computers, for non-majors. Topics include coding basics, representing code and data using a computer, and applications of computing that are important to society.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%204"
+    },
+    {
+      "id": "CMPSC 5A",
+      "code": "CMPSC 5A",
+      "title": "Introduction to Data Science 1",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to data science methods and Python programming language for students with little to no experience in the subjects. Topics include foundational programming concepts, problem-solving strategies and code design, and data science concepts as table operations, exploratory data analysis, basic probability.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%205A"
+    },
+    {
+      "id": "CMPSC 5B",
+      "code": "CMPSC 5B",
+      "title": "Introduction to Data Science 2",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Students explore the data science lifecycle, including question formulation, data collection and cleaning, exploratory data analysis and visualization, statistical inference and prediction, and decision-making. The course focus is on transforming and analyzing data; machine learning methods including regression, classification and clustering; principles behind data visualizations; concepts of measurement error and prediction; and techniques for scalable data processing.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 5A",
+            "CMPSC 8",
+            "ECE 3"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%205B"
+    },
+    {
+      "id": "CMPSC 8",
+      "code": "CMPSC 8",
+      "title": "Introduction to Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to computer program development for students with little to no programming experience. Basic programming concepts, variables and expressions, data and control structures, algorithms, debugging, program design, and documentation.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%208"
+    },
+    {
+      "id": "CMPSC 9",
+      "code": "CMPSC 9",
+      "title": "Intermediate Python Programming",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Intermediate topics in Computer Science using the Python programming language. Topics include object oriented programming, runtime analysis, data structures, and software testing methodologies.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 8",
+            "ENGR 3",
+            "ECE 3"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%209"
+    },
+    {
+      "id": "CMPSC 11AD",
+      "code": "CMPSC 11AD",
+      "title": "Programming Language Laboratory: ADA",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011AD"
+    },
+    {
+      "id": "CMPSC 11AP",
+      "code": "CMPSC 11AP",
+      "title": "Programming Language Laboratory: APL",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011AP"
+    },
+    {
+      "id": "CMPSC 11C",
+      "code": "CMPSC 11C",
+      "title": "Programming Language Laboratory",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses a working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011C"
+    },
+    {
+      "id": "CMPSC 11CO",
+      "code": "CMPSC 11CO",
+      "title": "Programming Language Laboratory: COBOL",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses a working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011CO"
+    },
+    {
+      "id": "CMPSC 11FO",
+      "code": "CMPSC 11FO",
+      "title": "Programming Language Laboratory: Fortran",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses a working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011FO"
+    },
+    {
+      "id": "CMPSC 11JA",
+      "code": "CMPSC 11JA",
+      "title": "Programming Language Laboratory",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses a working knowledge of at least one programming language an opportuity to learn otherlanguages of interest. Each section studies a different language. Sections are: 11PA-Pascal, 11FO-Fortran, 11AP-APL, 11LI-LISP (2 units), 11AD-ADA, 11JA-JAVA.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011JA"
+    },
+    {
+      "id": "CMPSC 11LI",
+      "code": "CMPSC 11LI",
+      "title": "Programming Language Laboratory: LISP",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a studen who already possesses a working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011LI"
+    },
+    {
+      "id": "CMPSC 11PA",
+      "code": "CMPSC 11PA",
+      "title": "Programming Language Laboratory: Pascal",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011PA"
+    },
+    {
+      "id": "CMPSC 11PL",
+      "code": "CMPSC 11PL",
+      "title": "Programming Language Laboratory: PL/1",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a studen who already possesses a working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011PL"
+    },
+    {
+      "id": "CMPSC 11SN",
+      "code": "CMPSC 11SN",
+      "title": "Programming Language Laboratory: SNOBOL",
+      "department": "CMPSC",
+      "units": 1,
+      "description": "A self-paced course to allow a student who already possesses working knowledge of at least one programming language an opportunity to learn other languages of interest. Each section studies a different language.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2011SN"
+    },
+    {
+      "id": "CMPSC 16",
+      "code": "CMPSC 16",
+      "title": "Problem Solving with Computers I",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Fundamental building blocks for solving problems using computers. Topics include basic computer organization and programming constructs: memory CPU, binary arithmetic, variables, expressions, statements, conditionals, iteration, functions, parameters, recursion, primitive and composite data types, and basic operating system and debugging tools.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 8",
+            "ENGR 3",
+            "ECE 3"
+          ]
+        ],
+        "concurrent": [
+          [
+            "MATH 3A",
+            "MATH 2A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2016"
+    },
+    {
+      "id": "CMPSC 24",
+      "code": "CMPSC 24",
+      "title": "Problem Solving with Computers II",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Intermediate building blocks for solving problems using computers. Topics include intermediate object-oriented programming, data structures, object-oriented design, algorithms for manipulating these data structures and their run-time analyses. Data structures introduced include stacks, queues, lists, trees, and sets.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 16"
+          ]
+        ],
+        "concurrent": [
+          [
+            "MATH 3B",
+            "MATH 2B"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2024"
+    },
+    {
+      "id": "CMPSC 24A",
+      "code": "CMPSC 24A",
+      "title": "Problem Solving with Computers II",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Intermediate building blocks for solving problems using computers. Topics include data structures, object-oriented design and development, algorithms for manipulating these data structures and their runtime analyses. Data structures introduced include stacks, queues, lists, trees, and sets.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 16"
+          ]
+        ],
+        "concurrent": [
+          [
+            "MATH 3B",
+            "MATH 2B"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2024A"
+    },
+    {
+      "id": "CMPSC 32",
+      "code": "CMPSC 32",
+      "title": "Object Oriented Design and Implementation",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Advanced topics in object-oriented computing. Topics include encapsulation, data hiding, inheritance, polymorphism, compilation, linking and loading, memory management, and debugging; recent advances in design and development tools, practices, libraries, and operating system support.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 24"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2032"
+    },
+    {
+      "id": "CMPSC 40",
+      "code": "CMPSC 40",
+      "title": "Foundations of Computer Science",
+      "department": "CMPSC",
+      "units": 5,
+      "description": "Introduction to the theoretical underpinnings of computer science. Topics include propositional predicate logic, set theory, functions and relations, counting, mathematical induction and recursion (generating functions).",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 16"
+          ],
+          [
+            "MATH 4A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2040"
+    },
+    {
+      "id": "CMPSC 64",
+      "code": "CMPSC 64",
+      "title": "Computer Organization and Logic Design",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Assembly language programming and advanced computer organization; Digital logic design topics including gates, combinational circuits, flip-flops, and the design and analysis of sequential circuits.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 16"
+          ],
+          [
+            "MATH 3C",
+            "MATH 4A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2064"
+    },
+    {
+      "id": "CMPSC 90DA",
+      "code": "CMPSC 90DA",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2090DA"
+    },
+    {
+      "id": "CMPSC 90DB",
+      "code": "CMPSC 90DB",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2090DB"
+    },
+    {
+      "id": "CMPSC 99",
+      "code": "CMPSC 99",
+      "title": "Independent Studies in Computer Science",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Independent studies in computer science for advanced students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2099"
+    },
+    {
+      "id": "CMPSC 100",
+      "code": "CMPSC 100",
+      "title": "Introduction to Teaching Methods in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Designed to train outstanding undergraduates for learning assistant positions in CS courses. Lecture/discussion surveys current research and best practices in CS pedagogy including student development theories, different pedagogical techniques, and methods for assessing learning. Students gain experience working one-on-one with students, fostering positive learning environments, and providing feedback on student work. Students who successfully complete this course will earn units by serving as an apprentice undergraduate learning assistant.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20100"
+    },
+    {
+      "id": "CMPSC 110",
+      "code": "CMPSC 110",
+      "title": "Introduction to Research in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Defining a CS research problem, finding and reading technical papers, oral communication, technical writing, and independent learning. Course participants work in teams as they apprentice with a CS research group to propose an original research problem and write a research proposal.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 40"
+          ],
+          [
+            "CMPSC 32"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20110"
+    },
+    {
+      "id": "CMPSC 111",
+      "code": "CMPSC 111",
+      "title": "Introduction to Computational Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to the numerical algorithms that form the foundations of data science, machine learning, and computational science and engineering. Matrix computation, linear equation systems, eigenvalue and singular value decompositions, numerical optimization. The informed use of mathematical software environments and libraries, such as python/numpy/scipy.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "CMPSC 24"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20111"
+    },
+    {
+      "id": "CMPSC 130A",
+      "code": "CMPSC 130A",
+      "title": "Data Structures and Algorithms",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Data structures and applications with proofs of correctness and analysis. Hash Tables, Priority Queues (heaps); Balanced Search Trees. Graph Traversal techniques and their applications.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 40",
+            "MATH 8"
+          ],
+          [
+            "CMPSC 24",
+            "CMPSC 9"
+          ]
+        ],
+        "concurrent": [
+          [
+            "PSTAT 120A",
+            "ECE 139"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20130A"
+    },
+    {
+      "id": "CMPSC 130B",
+      "code": "CMPSC 130B",
+      "title": "Data Structures and Algorithms II",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Design and analysis of computer algorithms. Correctness proofs and solution of recurrence relations. Design techniques; divide and conquer, greedy strategies, dynamic programming. Applications of techniques to problems from several disciplines. NP - completeness.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20130B"
+    },
+    {
+      "id": "CMPSC 138",
+      "code": "CMPSC 138",
+      "title": "Automata and Formal Languages",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Formal languages; finite automata and regular expressions; properties of regular languages; pushdown automata and context-free grammars; properties of context-free languages; introduction to Turing machines and computability.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 40"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20138"
+    },
+    {
+      "id": "CMPSC 140",
+      "code": "CMPSC 140",
+      "title": "Parallel Scientific Computing",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Fundamentals of high performance computing and parallel algorithm design for numerical computation. Topics include parallel architectures and clusters, parallel programming with message-passing libraries and threads, program parallelization methodologies, parallel performance evaluation and optimization, parallel numerical algorithms and applications with different performance tradeoffs.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20140"
+    },
+    {
+      "id": "CMPSC 148",
+      "code": "CMPSC 148",
+      "title": "Computer Science Project",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Team-based project development. Topics include software engineering and professional development practices, interface design, advanced library support; techniques for team oriented design and development, testing and test driven development, and software reliability and robustness. Students present and demonstrate final projects.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 32"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20148"
+    },
+    {
+      "id": "CMPSC 153A",
+      "code": "CMPSC 153A",
+      "title": "Hardware/Software Interface",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Design and coding of embedded programs. Real-time constraints and management of resources. Practical I/O interfaces and protocols, polling, interrupt maintenance, atomic code, blocking and non-blocking tasks. Static and dynamic task scheduling under real-time and limited resource constraints.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20153A"
+    },
+    {
+      "id": "CMPSC 154",
+      "code": "CMPSC 154",
+      "title": "Computer Architecture",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to the architecture of computer systems. Topics include: central processing units, memory systems, channels and controllers, peripheral devices, interrupt systems, software versus hardware tradeoffs.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 32"
+          ],
+          [
+            "CMPSC 64"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20154"
+    },
+    {
+      "id": "CMPSC 156",
+      "code": "CMPSC 156",
+      "title": "Advanced Applications Programming",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Advanced application programming using a high-level, virtual-machine-based language. Topics include generic programming, exception handling, automatic memory management, and application development, management, and maintenance tools, third-party library use, version control, software testing, issue tracking, code review, and working with legacy code.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 24"
+          ],
+          [
+            "CMPSC 32"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20156"
+    },
+    {
+      "id": "CMPSC 160",
+      "code": "CMPSC 160",
+      "title": "Translation of Programming Languages",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Study of the structure of compilers. Topics include: lexical analysis; syntax analysis including LL and LR parsers; type checking; run-time environments; intermediate code generation; and compiler-construction tools.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 64",
+            "ECE 154",
+            "ECE 154A"
+          ],
+          [
+            "CMPSC 130A"
+          ],
+          [
+            "CMPSC 138"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20160"
+    },
+    {
+      "id": "CMPSC 162",
+      "code": "CMPSC 162",
+      "title": "Programming Languages",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Concepts of programming languages: scopes, parameter passing, storage management; control flow, exception handling; encapsulation and modularization mechanisms; reusability through genericity and inheritance; type systems; programming paradigms (imperative, object-oriented, functional, and others). Emerging programming languages and their development infrastructures.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ],
+          [
+            "CMPSC 138"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20162"
+    },
+    {
+      "id": "CMPSC 165A",
+      "code": "CMPSC 165A",
+      "title": "Artificial Intelligence",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to the field of artificial intelligence, which seeks to understand and build intelligent computational systems. Topics include intelligent agents, problem solving and heuristic search, knowledge representation and reasoning, uncertainty and probabilistic reasoning, machine learning, reinforcement learning, and responsible AI.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20165A"
+    },
+    {
+      "id": "CMPSC 165B",
+      "code": "CMPSC 165B",
+      "title": "Machine Learning",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Covers the most important techniques of machine learning (ML) and includes discussions of: well-posed learning problems; artificial neural networks; concept learning and general to specific ordering; decision tree learning; genetic algorithms; Bayesian learning; analytical learning; and others.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20165B"
+    },
+    {
+      "id": "CMPSC 170",
+      "code": "CMPSC 170",
+      "title": "Operating Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Basic concepts of operating systems. The notion of a process; interprocess communication and synchronization; input-output, file systems, memory management.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": [
+          [
+            "CMPSC 154",
+            "ECE 154A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20170"
+    },
+    {
+      "id": "CMPSC 171",
+      "code": "CMPSC 171",
+      "title": "Distributed Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Distributed systems architecture, distributed programming, network of computers, message passing, remote procedure calls, group communication, naming and membership problems, asynchrony, logical time, consistency, fault-tolerance, and recovery.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20171"
+    },
+    {
+      "id": "CMPSC 172",
+      "code": "CMPSC 172",
+      "title": "Software Engineering",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Software engineering is concerned with long-term, large-scale programming projects. Software management, cost estimates, problem specification and analysis, system design techniques, system testing and performance evaluation, and system maintenance. Students will design, manage, and implement a medium-sized project.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20172"
+    },
+    {
+      "id": "CMPSC 174A",
+      "code": "CMPSC 174A",
+      "title": "Fundamentals of Database Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Database system architectures, relational data model, relational algebra, relational calculus, SQL, QBE, query processing, integrity constraints (key constraints, referential integrity), database design, ER and object- oriented data model, functional dependence, lossless join and dependency preserving decompositions, Boyce-Codd and Third Normal Forms.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20174A"
+    },
+    {
+      "id": "CMPSC 174B",
+      "code": "CMPSC 174B",
+      "title": "Design and Implementation Techniques of Database Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Queries and processing, optimizer, cost models, execution plans, rewriting rules, access methods, spatial indexing; transactions, ACID properties, concurrency control, serializability, two-phase locking, timestamping, logging,checkpointing, transaction abort and commit, crash recovery; distributed databases.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 130B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20174B"
+    },
+    {
+      "id": "CMPSC 174N",
+      "code": "CMPSC 174N",
+      "title": "Introduction to Databases",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "ER/object-oriented data modeling, relational data model, database design, query languages (algebra, calculus, SQL, QBE), updates and views, query processing, integrity constraints (key constraints, referential integrity), functional dependence, Boyce-Codd and Third Normal Forms.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "CMPSC 130A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20174N"
+    },
+    {
+      "id": "CMPSC 176A",
+      "code": "CMPSC 176A",
+      "title": "Introduction to Computer Communication Networks",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Basic concepts in networking, the OSI model, error detection codes, flow control, routing, medium access control, and high-speed networks.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 32"
+          ],
+          [
+            "PSTAT 120A",
+            "ECE 139"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20176A"
+    },
+    {
+      "id": "CMPSC 176B",
+      "code": "CMPSC 176B",
+      "title": "Network Computing",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Focus on networking and web technologies used in the Internet. The class covers socket programming and web-based techniques that are used to build distributed applications.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 176A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20176B"
+    },
+    {
+      "id": "CMPSC 176C",
+      "code": "CMPSC 176C",
+      "title": "Advanced Topics in Internet Computing",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "General overview of wireless and mobile networking, multimedia, security, multicast, quality of service, IPv6, and web caching. During the second half of the course, one or more of the above are studied in greater detail.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 176A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20176C"
+    },
+    {
+      "id": "CMPSC 177",
+      "code": "CMPSC 177",
+      "title": "Computer Security",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to the basics of computer security and privacy. Analysis of technical difficulties of producing secure computer information systems that provide guaranteed controlled sharing. Examination and critique of current systems, methods, certification.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "CMPSC 170"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20177"
+    },
+    {
+      "id": "CMPSC 178",
+      "code": "CMPSC 178",
+      "title": "Introduction to Cryptography",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "An introduction to the basic concepts and techniques of cryptography and cryptanalysis. Topics include: The Shannon Theory, classical systems, the enigma machine, the data encryption standard, public key systems, digital signatures, file security.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 24"
+          ],
+          [
+            "CMPSC 40"
+          ],
+          [
+            "PSTAT 120A",
+            "PSTAT 121A",
+            "ECE 139"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20178"
+    },
+    {
+      "id": "CMPSC 180",
+      "code": "CMPSC 180",
+      "title": "Computer Graphics",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Overview of OpenGL graphics standard, OpenGL statemachine, other 3D graphics libraries, 3D graphicspipeline, 3D transformations and clipping, colormodel, shading model, shadow algorithms, texturing,curves and curved surfaces, graphics hardware,interaction devices and techniques",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20180"
+    },
+    {
+      "id": "CMPSC 181",
+      "code": "CMPSC 181",
+      "title": "Introduction to Computer Vision",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Overview of computer vision problems and techniques for analyzing the content of images and video. Topics include image formation, edge detection, image segmentation, pattern recognition, texture analysis, optical flow, stereo vision, shape representation and recovery techniques, issues in object recognition, and case studies of practical vision systems.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20181"
+    },
+    {
+      "id": "CMPSC 182",
+      "code": "CMPSC 182",
+      "title": "Multimedia Computing",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Introduction to multimedia and applications. Topics include streaming media, conferencing, webcasting, digital libraries, multimedia system architectures, standards (including JPEG and MPEG), and multimedia storage and retrieval. A key emphasis is on using the internet for delivery of multimedia data. (First offered 2003-2004)",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20182"
+    },
+    {
+      "id": "CMPSC 184",
+      "code": "CMPSC 184",
+      "title": "Mobile Application Development",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "An introduction to programming mobile computing devices. Students will learn about and study the shift in software development from desktop to mobile device applications. Topics will include software engineering and design practices, advances in programming practice, and support tools for mobile application development and testing. Students will develop and deploy mobile applications as part of their course work.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 56",
+            "CMPSC 156"
+          ],
+          [
+            "CMPSC 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20184"
+    },
+    {
+      "id": "CMPSC 185",
+      "code": "CMPSC 185",
+      "title": "Human-Computer Interaction",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "The study of human-computer interaction enables system architects to design useful, efficient, and enjoyable computer interfaces. This course teaches the theory, design guidelines, programming practices, and evaluation procedures behind effective human interaction with computers.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20185"
+    },
+    {
+      "id": "CMPSC 189A",
+      "code": "CMPSC 189A",
+      "title": "Senior Computer Systems Project",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "This course is the first in the 2-course Computer Science Capstone sequence. Student teams learn about modern software design and engineering techniques and work together to use them and their past educational experiences at UCSB to analyze, specify, design, and prototype innovative solutions to complex, real world problems using computers.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 48",
+            "CMPSC 56",
+            "CMPSC 148",
+            "CMPSC 156",
+            "CMPSC 172"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20189A"
+    },
+    {
+      "id": "CMPSC 189B",
+      "code": "CMPSC 189B",
+      "title": "Senior Computer Systems Project",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "This course is the second in the 2-course Computer Science Capstone sequence. Student teams continue their CMPSC 189A effort by evolving their specifications, design, and prototypes of advanced computer science solutions and systems. The students learn about interfaces, software integration, and testing, and prepare advanced demonstrations for public presentation at the end of the sequence.",
+      "prereqs": {
+        "required": [
+          [
+            "CMPSC 189A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20189B"
+    },
+    {
+      "id": "CMPSC 190A",
+      "code": "CMPSC 190A",
+      "title": "Special Topics in Computer Science: Foundations",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190A"
+    },
+    {
+      "id": "CMPSC 190B",
+      "code": "CMPSC 190B",
+      "title": "Special Topics in Computer Science: Software Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest incomputer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190B"
+    },
+    {
+      "id": "CMPSC 190C",
+      "code": "CMPSC 190C",
+      "title": "Special Topics in Computer Science: Programming Languages and Software Engineering",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190C"
+    },
+    {
+      "id": "CMPSC 190D",
+      "code": "CMPSC 190D",
+      "title": "Special Topics in Computer Science: Information Management",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190D"
+    },
+    {
+      "id": "CMPSC 190DA",
+      "code": "CMPSC 190DA",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DA"
+    },
+    {
+      "id": "CMPSC 190DB",
+      "code": "CMPSC 190DB",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DB"
+    },
+    {
+      "id": "CMPSC 190DC",
+      "code": "CMPSC 190DC",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DC"
+    },
+    {
+      "id": "CMPSC 190DD",
+      "code": "CMPSC 190DD",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DD"
+    },
+    {
+      "id": "CMPSC 190DE",
+      "code": "CMPSC 190DE",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DE"
+    },
+    {
+      "id": "CMPSC 190DF",
+      "code": "CMPSC 190DF",
+      "title": "Special Topics in Computer Science",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190DF"
+    },
+    {
+      "id": "CMPSC 190E",
+      "code": "CMPSC 190E",
+      "title": "Special Topics in Computer Science: Architectures",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190E"
+    },
+    {
+      "id": "CMPSC 190F",
+      "code": "CMPSC 190F",
+      "title": "Special Topics in Computer Science: Networking",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit coureses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190F"
+    },
+    {
+      "id": "CMPSC 190G",
+      "code": "CMPSC 190G",
+      "title": "Special Topics in Computer Science: Security",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190G"
+    },
+    {
+      "id": "CMPSC 190H",
+      "code": "CMPSC 190H",
+      "title": "Special Topics in Computer Science: Scientific Computing",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190H"
+    },
+    {
+      "id": "CMPSC 190I",
+      "code": "CMPSC 190I",
+      "title": "Special Topics in Computer Science: Intelligent and Interactive Systems",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190I"
+    },
+    {
+      "id": "CMPSC 190J",
+      "code": "CMPSC 190J",
+      "title": "Special Topics in Computer Science: General",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190J"
+    },
+    {
+      "id": "CMPSC 190K",
+      "code": "CMPSC 190K",
+      "title": "Special Topics in Computer Science: Computer Systems Modeling and Analysis",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "These variable unit courses provide for the study of topics of current interest in computer science.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190K"
+    },
+    {
+      "id": "CMPSC 190N",
+      "code": "CMPSC 190N",
+      "title": "Special Topics in Computer Science: General",
+      "department": "CMPSC",
+      "units": 4,
+      "description": "Provides for the study of topics of current interest in computer science: A. Foundations; B. Software Systems; C. Programming Languages and Software Engineering; D. Information Management; E. Architecture; F. Networking; G. Security; H. Scientific Computing; I. Intelligent and Interactive Systems; N. General.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20190N"
+    },
+    {
+      "id": "CMPSC 192",
+      "code": "CMPSC 192",
+      "title": "Projects in Computer Science",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Projects in computer science for advanced undergraduate students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20192"
+    },
+    {
+      "id": "CMPSC 193",
+      "code": "CMPSC 193",
+      "title": "Internship in Industry",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Special projects for selected students. Offered in conjunction with selected industrial and research firms and under direct faculty supervision. Written proposal and final report required.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20193"
+    },
+    {
+      "id": "CMPSC 196",
+      "code": "CMPSC 196",
+      "title": "Undergraduate Research",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Research opportunities for undergraduate students. Students will be expected to giveregular oral presentations, actively participate in a weekly seminar, and prepare at least one written report on their research.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20196"
+    },
+    {
+      "id": "CMPSC 196B",
+      "code": "CMPSC 196B",
+      "title": "Undergraduate Research",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Advanced research for undergraduate students, by petition after completing a minimum of 4 units of CMPSC 196 for a letter grade. The student will propose a specific research project and make a public presentation of final results. Evaluation and grade will be based on feedback from faculty advisor and one other faculty member.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20196B"
+    },
+    {
+      "id": "CMPSC 199",
+      "code": "CMPSC 199",
+      "title": "Independent Studies in Computer Science",
+      "department": "CMPSC",
+      "units": 0,
+      "description": "Independent studies in computer science for advanced students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20199"
+    },
+    {
+      "id": "ECE 1A",
+      "code": "ECE 1A",
+      "title": "Computer Engineering Seminar",
+      "department": "ECE",
+      "units": 1,
+      "description": "Introductory seminar to expose students to a broad range of topics in computer engineering.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%201A"
+    },
+    {
+      "id": "ECE 1B",
+      "code": "ECE 1B",
+      "title": "Ten Puzzling Problems in Computer Engineering",
+      "department": "ECE",
+      "units": 1,
+      "description": "Gaining familiarity with, and motivation to study, the field of computer engineering, through puzzle-like problems that represent a range of challenges facing computer engineers in their daily problem-solving efforts and at the frontiers of research.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%201B"
+    },
+    {
+      "id": "ECE 3",
+      "code": "ECE 3",
+      "title": "Introduction to Python Programming For Engineers",
+      "department": "ECE",
+      "units": 4,
+      "description": "This course represents a comprehensive foundation for core ECE topics in signal processing, image analysis, machine learning, optimization and control. The lectures present concepts from linear algebra, such as matrix computations, systems of linear equations, eigenspace decomposition, inner-product, orthogonality, least-squares and linear regression. Students actively engage with the technical materials with an introduction to Python programming and associated hands-on sessions. The materials are be motivated by real-world scenarios ranging from medical imaging to autonomous vehicles, from (miscarriage of) justice to brain-machine interfaces, from music analysis to GPS design.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%203"
+    },
+    {
+      "id": "ECE 5",
+      "code": "ECE 5",
+      "title": "Introduction to Electrical & Computer Engineering",
+      "department": "ECE",
+      "units": 4,
+      "description": "Aims at exposing freshmen students to the different sub-fields within Electrical and Computer Engineering. Composed of lectures by different faculty members and a weekly laboratory based on projects that are executed using the Arduino environment.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%205"
+    },
+    {
+      "id": "ECE 10A",
+      "code": "ECE 10A",
+      "title": "Foundations of Analog and Digital Circuits & Systems",
+      "department": "ECE",
+      "units": 3,
+      "description": "The objective of the course is to establish the foundations of analog and digital circuits. The course will introduce the student to the power of abstraction, resistive networks, network analysis, nonlinear analysis and the digital abstraction.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 2A",
+            "MATH 3A",
+            "MATH 3AH"
+          ],
+          [
+            "MATH 4A",
+            "MATH 4AI",
+            "MATH 3C"
+          ],
+          [
+            "PHYS 3"
+          ]
+        ],
+        "concurrent": [
+          [
+            "MATH 4B",
+            "MATH 4BI",
+            "MATH 5A"
+          ],
+          [
+            "PHYS 7B",
+            "PHYS 23"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010A"
+    },
+    {
+      "id": "ECE 10AL",
+      "code": "ECE 10AL",
+      "title": "Foundations of Analog and Digital Circuits and Systems Lab",
+      "department": "ECE",
+      "units": 2,
+      "description": "The goal of 10AL is to provide the student with a hands-on application of the concepts discussed in ECE 10A. The lab will introduce the use of microcontrollers as a data acquisition system, network analysis, resistors, nonlinear analysis and digital abstraction.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "ECE 10A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010AL"
+    },
+    {
+      "id": "ECE 10B",
+      "code": "ECE 10B",
+      "title": "Foundations of Analog and Digital Circuits and Systems",
+      "department": "ECE",
+      "units": 3,
+      "description": "The objective of the course is to introduce the MOSFET both as a simple digital switch and as controlled current source for analog design. The course will cover basic digital design, small-signal analysis, charge storage elements and operational amplifiers.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 10A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010B"
+    },
+    {
+      "id": "ECE 10BL",
+      "code": "ECE 10BL",
+      "title": "Foundations of Analog and Digital Circuits and Systems Lab",
+      "department": "ECE",
+      "units": 2,
+      "description": "The goal of 10BL is to provide the student with a hands-on application of the concepts discussed in ECE 10B. The lab will utilize the microcontroller to introduce students to the understanding of datasheets for both digital and analog circuits, single-stage amplifier design and basic instrumentation.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "ECE 10B"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010BL"
+    },
+    {
+      "id": "ECE 10C",
+      "code": "ECE 10C",
+      "title": "Foundations of Analog and Digital Circuits and Systems",
+      "department": "ECE",
+      "units": 3,
+      "description": "The objective of the course is to introduce the student to the basics of transient analysis. The course will energy and power dissipation in digital circuits, first-order and second-order linear time invariant circuits, sinusoidal steady state, impedance representation, feedback and resonance.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 10B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010C"
+    },
+    {
+      "id": "ECE 10CL",
+      "code": "ECE 10CL",
+      "title": "Foundations of Analog and Digital Circuits and Systems Lab",
+      "department": "ECE",
+      "units": 2,
+      "description": "The goal of 10CL is to provide the student with a hands-on application of the concepts discussed in ECE 10C. The lab will utilize the microcontroller to introduce students to the understanding of propagation delay in digital circuits and the resulting power dissipation, first order linear networks, second order linear networks, sinusoidal steady-state, impedance analysis and op-amp circuits.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "ECE 10C"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2010CL"
+    },
+    {
+      "id": "ECE 15A",
+      "code": "ECE 15A",
+      "title": "Fundamentals of Logic Design",
+      "department": "ECE",
+      "units": 4,
+      "description": "Boolean algebra, logic of propositions, minterm and maxterm expansions, Karnaugh maps, Quine-McCluskey method, melti-level circuits, combinational circuit design and simulation, multiplexers, decoders, programmable logic devices.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2015A"
+    },
+    {
+      "id": "ECE 92",
+      "code": "ECE 92",
+      "title": "Projects in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 4,
+      "description": "Projects in electrical and computer engineering for advanced undergraduate students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2092"
+    },
+    {
+      "id": "ECE 94A",
+      "code": "ECE 94A",
+      "title": "Circuits",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094A"
+    },
+    {
+      "id": "ECE 94AA",
+      "code": "ECE 94AA",
+      "title": "Micro-electro-mechanical-systems",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094AA"
+    },
+    {
+      "id": "ECE 94B",
+      "code": "ECE 94B",
+      "title": "Systems Theory",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094B"
+    },
+    {
+      "id": "ECE 94BB",
+      "code": "ECE 94BB",
+      "title": "Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094BB"
+    },
+    {
+      "id": "ECE 94C",
+      "code": "ECE 94C",
+      "title": "Communications Systems",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094C"
+    },
+    {
+      "id": "ECE 94D",
+      "code": "ECE 94D",
+      "title": "Control Systems",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094D"
+    },
+    {
+      "id": "ECE 94E",
+      "code": "ECE 94E",
+      "title": "Signal Processing",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094E"
+    },
+    {
+      "id": "ECE 94F",
+      "code": "ECE 94F",
+      "title": "Solid State",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094F"
+    },
+    {
+      "id": "ECE 94G",
+      "code": "ECE 94G",
+      "title": "Fields and Waves",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094G"
+    },
+    {
+      "id": "ECE 94H",
+      "code": "ECE 94H",
+      "title": "Quantum Electronics",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094H"
+    },
+    {
+      "id": "ECE 94I",
+      "code": "ECE 94I",
+      "title": "Microwave Electronics",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094I"
+    },
+    {
+      "id": "ECE 94J",
+      "code": "ECE 94J",
+      "title": "Switching Theory",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094J"
+    },
+    {
+      "id": "ECE 94K",
+      "code": "ECE 94K",
+      "title": "Digital Systems Design",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094K"
+    },
+    {
+      "id": "ECE 94L",
+      "code": "ECE 94L",
+      "title": "Computer Architecture",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094L"
+    },
+    {
+      "id": "ECE 94M",
+      "code": "ECE 94M",
+      "title": "Computer Graphics",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094M"
+    },
+    {
+      "id": "ECE 94N",
+      "code": "ECE 94N",
+      "title": "Pattern Recognition",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094N"
+    },
+    {
+      "id": "ECE 94O",
+      "code": "ECE 94O",
+      "title": "Microprocessors and Microprocessor-based systems",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094O"
+    },
+    {
+      "id": "ECE 94P",
+      "code": "ECE 94P",
+      "title": "Simulation",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094P"
+    },
+    {
+      "id": "ECE 94Q",
+      "code": "ECE 94Q",
+      "title": "Imaging Systems and Image Processing",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094Q"
+    },
+    {
+      "id": "ECE 94R",
+      "code": "ECE 94R",
+      "title": "General",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094R"
+    },
+    {
+      "id": "ECE 94S",
+      "code": "ECE 94S",
+      "title": "Speech",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094S"
+    },
+    {
+      "id": "ECE 94T",
+      "code": "ECE 94T",
+      "title": "Robot Control",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094T"
+    },
+    {
+      "id": "ECE 94U",
+      "code": "ECE 94U",
+      "title": "Optoelectronics",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094U"
+    },
+    {
+      "id": "ECE 94V",
+      "code": "ECE 94V",
+      "title": "Scientific Computation",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094V"
+    },
+    {
+      "id": "ECE 94W",
+      "code": "ECE 94W",
+      "title": "Computer Network",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094W"
+    },
+    {
+      "id": "ECE 94X",
+      "code": "ECE 94X",
+      "title": "Distributed Computation",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094X"
+    },
+    {
+      "id": "ECE 94Y",
+      "code": "ECE 94Y",
+      "title": "Numerical Differential Equations",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094Y"
+    },
+    {
+      "id": "ECE 94Z",
+      "code": "ECE 94Z",
+      "title": "Nanotechnology",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2094Z"
+    },
+    {
+      "id": "ECE 96",
+      "code": "ECE 96",
+      "title": "Undergraduate Research",
+      "department": "ECE",
+      "units": 0,
+      "description": "Research opportunities for undergraduate students. students will be expected to give regular oral presentations, actively participate in a weekly seminar, and prepare at least one written report on their research.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%2096"
+    },
+    {
+      "id": "ECE 120A",
+      "code": "ECE 120A",
+      "title": "Integrated Circuit Design and Fabrication",
+      "department": "ECE",
+      "units": 4,
+      "description": "Theory, fabrication, and characterization of solid state devices including P-N junctions, capacitors, bipolar and MOS devices. Devices are fabricated using modern VLSI processing techniques including lithography, oxidation, diffusion, and evaporation. Physics and performance of processing steps are discussed and analyzed.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 132"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20120A"
+    },
+    {
+      "id": "ECE 120B",
+      "code": "ECE 120B",
+      "title": "Integrated Circuit Design and Fabrication",
+      "department": "ECE",
+      "units": 4,
+      "description": "Design, simulation, fabrication, and characterization of NMOS integrated circuits. Circuit design and layout is performed using commercial layout software. Circuits are fabricated using modern VLSI processing techniques. Circuit and discrete device electrical performance are analyzed.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 120A",
+            "ECE 124B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20120B"
+    },
+    {
+      "id": "ECE 122A",
+      "code": "ECE 122A",
+      "title": "VLSI Principles",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduction to CMOS digital VLSI design: CMOS devices and manufacturing technology; transistor level design of static and dynamic logic gates and components and interconnections; circuit characterization: delay, noise margins, and power dissipation; combinational and sequential circuits; arithmetic operations and memories.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 152A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20122A"
+    },
+    {
+      "id": "ECE 122B",
+      "code": "ECE 122B",
+      "title": "VLSI Architecture and Design",
+      "department": "ECE",
+      "units": 4,
+      "description": "Practical issues in VLSI circuit design, pad/pin limitations, clocking and interfacing standards, electrical packaging for high-speed and high-performance design. On-chip noise and crosstalk, clock and power distribution, architectural and circuit design constraints, interconnection limits and transmission line effects.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 124A",
+            "ECE 123",
+            "ECE 122A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20122B"
+    },
+    {
+      "id": "ECE 123",
+      "code": "ECE 123",
+      "title": "High-Performance Digital Circuit Design",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduction to high-performance digital circuit design techniques. Basics of device physics including deep submicron effects; device sizing and logical effort; Circuit design styles; clocking & timing issues; memory & datapath design; Low-power design; VLSI design flows and associated EDA tools.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 10A"
+          ],
+          [
+            "ECE 10AL",
+            "ECE 10BL",
+            "ECE 10CL",
+            "ECE 2A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20123"
+    },
+    {
+      "id": "ECE 125",
+      "code": "ECE 125",
+      "title": "High Speed Digital Integrated Circuit Design",
+      "department": "ECE",
+      "units": 4,
+      "description": "Advanced digital VLSI design: CMOS scaling, nanoscale issues including variability, thermal management, interconnects, reliability; non-clocked, clocked and self-timed logic gates; clocked storage elements; high-speed components, PLLs and DLLs; clock and power distribution; memory systems; signaling and I/O design; low-power design.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 124A",
+            "ECE 137A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20125"
+    },
+    {
+      "id": "ECE 130A",
+      "code": "ECE 130A",
+      "title": "Signal Analysis and Processing",
+      "department": "ECE",
+      "units": 4,
+      "description": "Analysis of continuous time linear systems in the time and frequency domains. Superposition and convolution. Bilateral and unilateral Laplace transforms. Fourier series and Fourier transforms. Filtering, modulation, and feedback.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 5A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20130A"
+    },
+    {
+      "id": "ECE 130B",
+      "code": "ECE 130B",
+      "title": "Signal Analysis and Processing",
+      "department": "ECE",
+      "units": 4,
+      "description": "Analysis of discrete time linear systems in the time and frequency domains. Z transforms, Discrete Fourier transforms. Sampling and aliasing.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20130B"
+    },
+    {
+      "id": "ECE 130C",
+      "code": "ECE 130C",
+      "title": "Introduction to Applied Linear Algebra",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduction to applied linear algebra: matrix arithmetic, vector spaces, orthogonality, matrix factorizations, determinants, eigenvalues and eigenvectors, difference and differential equations.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 5A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20130C"
+    },
+    {
+      "id": "ECE 132",
+      "code": "ECE 132",
+      "title": "Introduction to Solid-State Electronic Devices",
+      "department": "ECE",
+      "units": 4,
+      "description": "Electrons and holes in semiconductors; doping (P and N); state occupation statistics, transport properties of electrons and holes; P-N junction diodes; I-V, C-V, and switching properties of P-N junctions; introduction of bipolar transitors, MOSFET's and JFET's.",
+      "prereqs": {
+        "required": [
+          [
+            "PHYS 4",
+            "PHYS 24",
+            "PHYS 7D"
+          ],
+          [
+            "MATH 4B"
+          ],
+          [
+            "MATH 4BI",
+            "MATH 5A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20132"
+    },
+    {
+      "id": "ECE 134",
+      "code": "ECE 134",
+      "title": "Introduction to Fields and Waves",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduction to applied electromagnetics and wave phenomena in high frequency electron circuits and systems. Waves on transmission-lines, elements of electrostatics and magnetostatics and applications, plane waves, examples and applications to RF, microwave, and optical systems.",
+      "prereqs": {
+        "required": [
+          [
+            "PHYS 3",
+            "PHYS 23",
+            "PHYS 7B"
+          ],
+          [
+            "PHYS 4",
+            "PHYS 24",
+            "PHYS 7C"
+          ],
+          [
+            "MATH 4B",
+            "MATH 4BI",
+            "MATH 5A"
+          ],
+          [
+            "MATH 5B",
+            "MATH 6A",
+            "MATH 6AI"
+          ],
+          [
+            "MATH 5C",
+            "MATH 6B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20134"
+    },
+    {
+      "id": "ECE 135",
+      "code": "ECE 135",
+      "title": "Optical Fiber Communications",
+      "department": "ECE",
+      "units": 4,
+      "description": "Optical fiber as a transmission medium, dispersion and nonlinear effects in fiber transmission, fiber and semiconductor optical amplifiers and lasers, optical modulators, photo detectors, optical receivers, wavelength division multiplexing components, optical filters, basic transmission system analysis and design.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 132"
+          ],
+          [
+            "ECE 134"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20135"
+    },
+    {
+      "id": "ECE 137A",
+      "code": "ECE 137A",
+      "title": "Circuits and Electronics I",
+      "department": "ECE",
+      "units": 4,
+      "description": "Analysis and design of single stage and multistage transistor circuits including biasing, gain, impedances and maximum signal levels.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 10A"
+          ],
+          [
+            "ECE 10AL",
+            "ECE 2A"
+          ],
+          [
+            "ECE 130A"
+          ],
+          [
+            "ECE 132"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20137A"
+    },
+    {
+      "id": "ECE 137B",
+      "code": "ECE 137B",
+      "title": "Circuits and Electronics II",
+      "department": "ECE",
+      "units": 4,
+      "description": "Analysis and design of single stage and multistage transistor circuits at low and high frequencies. Transient response. Analysis and design of feedback circuits. Stability criteria.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 10C"
+          ],
+          [
+            "ECE 10CL",
+            "ECE 2C"
+          ],
+          [
+            "ECE 137A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20137B"
+    },
+    {
+      "id": "ECE 139",
+      "code": "ECE 139",
+      "title": "Probability and Statistics",
+      "department": "ECE",
+      "units": 4,
+      "description": "Fundamentals of probability, conditional probability, Bayes rule, random variables, functions of random variables, expectation and high-order moments, Markov chains, hypothesis testing.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20139"
+    },
+    {
+      "id": "ECE 141A",
+      "code": "ECE 141A",
+      "title": "Introduction to Nanoelectromechanical and Microelectromechanical systems (NEMS/MEMS)",
+      "department": "ECE",
+      "units": 3,
+      "description": "Introduction to nano- and microtechnology. Scaling laws and nanoscale physics are stressed. Individual subjects at the nanoscale including materials, mechanics, photonics, electronics, and fluidics will be described, with an emphasis on differences of behavior at the nanoscale and real-world examples.",
+      "prereqs": {
+        "required": [
+          [
+            "ME 16",
+            "ME W 16"
+          ],
+          [
+            "ME W 17"
+          ],
+          [
+            "ME 152A"
+          ],
+          [
+            "ECE 130A",
+            "ECE 137A"
+          ]
+        ],
+        "concurrent": [
+          [
+            "ME 151A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20141A"
+    },
+    {
+      "id": "ECE 141B",
+      "code": "ECE 141B",
+      "title": "MEMS: Processing and Device Characterization",
+      "department": "ECE",
+      "units": 4,
+      "description": "Lectures and laboratory on semiconductor-based processing for MEMS. Description of key equipment and characterization tools used for MEMS and design, fabrication, characterization and testing of MEMS. Emphasis on current MEMS devices including accelerometers, comb drives, micro-reactors and capacitor-actuators.",
+      "prereqs": {
+        "required": [
+          [
+            "ME 141A",
+            "ECE 141A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20141B"
+    },
+    {
+      "id": "ECE 142",
+      "code": "ECE 142",
+      "title": "INTRODUCTION TO POWER ELECTRONICS",
+      "department": "ECE",
+      "units": 4,
+      "description": "An introduction to modern switched-mode power electronics and associated devices. Covers modern converter/inverter topologies for the control and conversion of electrical power with high efficiency with applications in power supplies, renewable energy systems, lighting, electric/hybrid vehicles, and motor drivers.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 132"
+          ],
+          [
+            "ECE 134"
+          ],
+          [
+            "ECE 137A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20142"
+    },
+    {
+      "id": "ECE 144",
+      "code": "ECE 144",
+      "title": "Electromagnetic Fields and Waves",
+      "department": "ECE",
+      "units": 4,
+      "description": "Waves on transmission lines, Maxwell's equations, skin effect, propagation and reflection of electromagnetic waves, microwave integrated circuit principles, metal and dielectric waveguides, resonant cavities, antennas. Microwave and optical device examples and experiencewith modern microwave and CAD software.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 134"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20144"
+    },
+    {
+      "id": "ECE 145A",
+      "code": "ECE 145A",
+      "title": "Communication Electronics",
+      "department": "ECE",
+      "units": 5,
+      "description": "RF/Microwave circuits. Transistor, transmission-line, and passive element characteristics. Transmission-line theory and impedance matching. Amplifier design for maximum available gain. Amplifier stability. Gain compression and power limits. Introduction to noise figure, and to intermodulation distortion.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 137A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20145A"
+    },
+    {
+      "id": "ECE 145B",
+      "code": "ECE 145B",
+      "title": "Communication Electronics II",
+      "department": "ECE",
+      "units": 5,
+      "description": "RF models for CMOS and BJT. Discrete vs. IC implementation. On-chip passive components. LNAs. PAs. T/R switches. Mixers. VCOs. Poly-phase filters Radio link budget. Analog and digital modulation schemes. Introduction to receiver architectures. I&Q modulation. Image-reject architectures.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 145A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20145B"
+    },
+    {
+      "id": "ECE 145C",
+      "code": "ECE 145C",
+      "title": "Communication Electronics III",
+      "department": "ECE",
+      "units": 5,
+      "description": "Modern wireless communication standards. Cellular phone. Wireless LAN. Introduction to multi-access techniques. Advanced modulation schemes. Interference and distortion. Modern transceiver architectures. Direct conversion vs. low IF vs. super-heterodyne. Sub-sampling receiver. Direct polar modulator. Frequency synthesis using PLL.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 145B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20145C"
+    },
+    {
+      "id": "ECE 146A",
+      "code": "ECE 146A",
+      "title": "Digital Communication Fundamentals",
+      "department": "ECE",
+      "units": 5,
+      "description": "Signal and channel models, with emphasis on wireless systems; digital modulation; demodulation basics; statistical modeling of noise, including review of probability theory and random variables.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ],
+          [
+            "ECE 139",
+            "PSTAT 120A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20146A"
+    },
+    {
+      "id": "ECE 146B",
+      "code": "ECE 146B",
+      "title": "Wireless Communication Systems Design",
+      "department": "ECE",
+      "units": 5,
+      "description": "Optimal demodulation, including signal space geometry; communication performance characterization; advanced wireless communication techniques, including multi-antenna and multicarrier systems; other emerging frontiers in communications.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ],
+          [
+            "ECE 146A"
+          ],
+          [
+            "ECE 139",
+            "PSTAT 120A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20146B"
+    },
+    {
+      "id": "ECE 147A",
+      "code": "ECE 147A",
+      "title": "Feedback Control Systems - Theory and Design",
+      "department": "ECE",
+      "units": 5,
+      "description": "Feedback systems design, specifications in time and frequency domains. Analysis and synthesis of closed loope systems. Computer aided analysis anddesign.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20147A"
+    },
+    {
+      "id": "ECE 147B",
+      "code": "ECE 147B",
+      "title": "Digital Control Systems - Theory and Design",
+      "department": "ECE",
+      "units": 5,
+      "description": "Analysis of sampled data feedback systems; state space description of linear systems: observability, controllability, pole assignment, state feedback, observers. Design of digital control systems.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 147A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20147B"
+    },
+    {
+      "id": "ECE 147C",
+      "code": "ECE 147C",
+      "title": "Control System Design Project",
+      "department": "ECE",
+      "units": 5,
+      "description": "Students are required to design, implement, and document a significant control systems project. The project is implemented in hardware or in high-fidelity numerical simulators. Lectures and laboratories cover special topics related to the practical implementation of control systems.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 147A",
+            "ME 155B",
+            "ME 173"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20147C"
+    },
+    {
+      "id": "ECE 148",
+      "code": "ECE 148",
+      "title": "Applications of Signal Analysis and Processing",
+      "department": "ECE",
+      "units": 4,
+      "description": "A sequence of engineering applications of signal analysis and processing techniques; in communications, image processing, analog and digital filter design, signal detection and parameter estimation, holography and tomography, Fourier optics, and microwave and acoustic sensing.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ],
+          [
+            "ECE 130B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20148"
+    },
+    {
+      "id": "ECE 150",
+      "code": "ECE 150",
+      "title": "MOBILE EMBEDDED SYSTEMS",
+      "department": "ECE",
+      "units": 4,
+      "description": "Architectures of modern smartphones and their key hardware components including mobile application processors, communications chips, display, touchscreen, graphics, camera, battery, GPS,and various sensors; the OS and software development platform of smartphones; smartphone applications; low power design techniques.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 152A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20150"
+    },
+    {
+      "id": "ECE 152A",
+      "code": "ECE 152A",
+      "title": "Digital Design Principles",
+      "department": "ECE",
+      "units": 5,
+      "description": "Design of synchronous digital systems: timing diagrams, propagation delay, latches and flip-flops, shift registers and counters, Mealy/Moore finite state machines, Verilog, 2-phase clocking, timing analysis, CMOS implementation, S-RAM, RAM-based designs, ASM charts, state minimization.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 15A"
+          ],
+          [
+            "ECE 2A",
+            "ECE 10A",
+            "ECE 10AL"
+          ],
+          [
+            "CMPSC 30",
+            "CMPSC 64"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20152A"
+    },
+    {
+      "id": "ECE 153A",
+      "code": "ECE 153A",
+      "title": "Hardware/Software Interface",
+      "department": "ECE",
+      "units": 4,
+      "description": "Design and coding of embedded programs. Real-time constraints and management of resources. Practical I/O interfaces and protocols, polling, interrupt maintenance, atomic code, blocking and non-blocking tasks. Static and dynamic task scheduling under real-time and limited resource constraints.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20153A"
+    },
+    {
+      "id": "ECE 153B",
+      "code": "ECE 153B",
+      "title": "Sensor and Peripheral Interface Design",
+      "department": "ECE",
+      "units": 4,
+      "description": "Hardware description languages; field-programmable logic and ASIC design techniques. Mixed-signal techniques: A/D and D/A converter interfaces; video and audio signal acquisition, processing and generation, communication and network interfaces.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 152A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20153B"
+    },
+    {
+      "id": "ECE 154A",
+      "code": "ECE 154A",
+      "title": "Introduction to Computer Architecture",
+      "department": "ECE",
+      "units": 4,
+      "description": "Instruction-set architecture (ISA) and computer performance; Machine instructions, assembly, addressing modes; Memory map,arrays, pointers; Procedure calls; Number formats; Simple ALUs; Data path,control, microprogram; Buses, I/O programming, interrupts; Pipelined data paths and control schemes.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 152A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20154A"
+    },
+    {
+      "id": "ECE 154B",
+      "code": "ECE 154B",
+      "title": "Advanced Computer Architecture",
+      "department": "ECE",
+      "units": 4,
+      "description": "ISA variations; Pipeline data and controlhazards; Fast ALU design; Instruction-level parallelism, multithreading, VLIW; Vector and array processing, multi/many-core chips; Cache and virtual memory; Disk arrays; Shared- and distributed-memory systems, supercomputers; Reconfigurable and application-specific circuits.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 154A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20154B"
+    },
+    {
+      "id": "ECE 157A",
+      "code": "ECE 157A",
+      "title": "Machine Learning in Design and Test Automation",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduces the various machine learning techniques and how they are utilized to improve hardware design and test automation processes. The potential benefits and theoretical barriers for implementing a machine learning solution in practice are explained.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 152A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20157A"
+    },
+    {
+      "id": "ECE 157B",
+      "code": "ECE 157B",
+      "title": "Artificial Intelligence in Design and Test Automation",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduces an artificial intelligence system view to apply machine learning in design and test automation processes. The various components for building an Intelligent Engineering Assistant (IEA) to perform an engineering task in an industrial setting are explained.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 157A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20157B"
+    },
+    {
+      "id": "ECE 158",
+      "code": "ECE 158",
+      "title": "Digital Signal Processing",
+      "department": "ECE",
+      "units": 4,
+      "description": "Digital Signal Processing, with Applications: The Fast Fourier transform, discrete cosine transform, and multirate digital signal processing techniques, with applications to digital cellular communications and wireless access points, and audio, voice, still image, video, and biological signal analysis, recognition and compression.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20158"
+    },
+    {
+      "id": "ECE 160",
+      "code": "ECE 160",
+      "title": "Multimedia Systems",
+      "department": "ECE",
+      "units": 4,
+      "description": "Introduction to multimedia and applications, including WWW, image/video databases and video streaming. Covers media content analysis, media data organization and indexing (image/video databases), and media data distribution and interaction (video on-demand and interactive TV).",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20160"
+    },
+    {
+      "id": "ECE 162A",
+      "code": "ECE 162A",
+      "title": "The Quantum Description of Electronic Materials",
+      "department": "ECE",
+      "units": 4,
+      "description": "Electrons as particles and waves, Schrodinger's equation and illustrative solutions. Tunnelling. Atomic structure, the exclusion principle and the periodic table. Bonds. Free electrons in metals, periodic potentials and energy bands.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A"
+          ],
+          [
+            "ECE 134"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20162A"
+    },
+    {
+      "id": "ECE 162B",
+      "code": "ECE 162B",
+      "title": "Fundamentals of the Solid State",
+      "department": "ECE",
+      "units": 4,
+      "description": "Crystal lattices and the structure of solids, with emphasis on semiconductors. Lattice vibrations. Electronic states and energy bands. Electrical and thermal conduction. Dielectric and optical properties. Semiconductor devices: diffusion, P-N junctions and diode behavior.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 162A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20162B"
+    },
+    {
+      "id": "ECE 162C",
+      "code": "ECE 162C",
+      "title": "Optoelectronic Materials and Devices",
+      "department": "ECE",
+      "units": 4,
+      "description": "Optical transitions in solids. Direct and indirect gap semiconductors. Luminescence. Excitons and photons. Fundamentals of optoelectronic devices: semiconductor lasers, Led's photoconductors, solar cells, photo diodes, modulators. Photoemission. Integrated circuits.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 162A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20162C"
+    },
+    {
+      "id": "ECE 178",
+      "code": "ECE 178",
+      "title": "Introduction to Digital Image and Video Processing",
+      "department": "ECE",
+      "units": 4,
+      "description": "Basic concepts in image and video processing. Topics include image formation and sampling, image transforms, image enhancement, and image and video compression including JPEG and MPEG coding standards.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20178"
+    },
+    {
+      "id": "ECE 179D",
+      "code": "ECE 179D",
+      "title": "Introduction to Robotics: Dynamics and Control",
+      "department": "ECE",
+      "units": 4,
+      "description": "Dynamic modeling and control methods for robotic systems. Lagrangian method for deriving equations of motion, introduction to the Jacobian, and modeling and control of forces and contact dynamics at a robotic end effector. Laboratories encourage a problem-solving approach to control.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 130A",
+            "ME 103"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20179D"
+    },
+    {
+      "id": "ECE 179P",
+      "code": "ECE 179P",
+      "title": "Introduction to Robotics: Planning and Kinematics",
+      "department": "ECE",
+      "units": 4,
+      "description": "Motion planning and kinematics topics with an emphasis on geometric reasoning, programming, and matrix computations. Motion planning: configuration spaces, sensor-based planning, decomposition and sampling methods, and advanced planning algorithms. Kinematics: reference frames, rotations and displacements, kinematic motion models.",
+      "prereqs": {
+        "required": [
+          [
+            "ENGR 3"
+          ]
+        ],
+        "concurrent": [
+          [
+            "ME 17",
+            "ECE 130C",
+            "ME 170A",
+            "ECE 181A"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20179P"
+    },
+    {
+      "id": "ECE 181",
+      "code": "ECE 181",
+      "title": "Introduction to Computer Vision",
+      "department": "ECE",
+      "units": 4,
+      "description": "Overview of computer vision problems and techniques for analyzing the content of images and video. Topics include image formation, edge detection, image segmentation, pattern recognition, texture analysis, optical flow, stereo vision, shape representation and recovery techniques, issues in object recognition, and case studies of practical vision systems.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20181"
+    },
+    {
+      "id": "ECE 183",
+      "code": "ECE 183",
+      "title": "Nonlinear Phenomena",
+      "department": "ECE",
+      "units": 4,
+      "description": "An introduction to nonlinear phenomena. Flows and bifurcations in one and two dimensions, chaos, fractals, strange attractors. Applications to physics, engineering, chemistry, and biology.",
+      "prereqs": {
+        "required": [
+          [
+            "PHYS 105A",
+            "PHYS 103"
+          ],
+          [
+            "ME 163"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20183"
+    },
+    {
+      "id": "ECE 188A",
+      "code": "ECE 188A",
+      "title": "Senior Electrical Engineering Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant project based on the knowledge and skills acquired in earlier coursework and integrate their technical knowledge through a practical design experience. The project is evaluated through written reports, oral presentations, and demonstrations of performance.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "ECE 153A",
+            "ECE 153B"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20188A"
+    },
+    {
+      "id": "ECE 188B",
+      "code": "ECE 188B",
+      "title": "Senior Electrical Engineering Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant project based on the knowledge and skills acquired in earlier coursework and integrate their technical knowledge through a practical design experience. The project is evaluated through written reports, oral presentations, and demonstrations of performance.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 188A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20188B"
+    },
+    {
+      "id": "ECE 188C",
+      "code": "ECE 188C",
+      "title": "Senior Electrical Engineering Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant project based on the knowledge and skills acquired in earlier coursework and integrate their technical knowledge through a practical design experience. The project is evaluated through written reports, oral presentations, and demonstrations of performance.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 188B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20188C"
+    },
+    {
+      "id": "ECE 189A",
+      "code": "ECE 189A",
+      "title": "Senior Computer Systems Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant computer-based project. The focus will be on designing a significant project based on the knowledge and skills acquired in earlier coursework. Groups work independently with interaction among groups via interface specifications and informal meetings. The project is evaluated through successful completion of milestones and individual/group project reports and presentations.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 153B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20189A"
+    },
+    {
+      "id": "ECE 189B",
+      "code": "ECE 189B",
+      "title": "Senior Computer Systems Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant computer-based project. Focus will be on building and implementing an embedded hardware system. Each group works independently. The project is evaluated through project reports, achieving milestones and through successful demonstration of hardware functionality.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 189A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20189B"
+    },
+    {
+      "id": "ECE 189C",
+      "code": "ECE 189C",
+      "title": "Senior Computer Systems Project",
+      "department": "ECE",
+      "units": 4,
+      "description": "Student groups design a significant computer-based project. The focus in this course will be on the integration of both hardware and software components. Students continue to work in groups. Apart from project reports and presentations, the evaluation will be based on successful demonstration of both hardware and software aspects of the project.",
+      "prereqs": {
+        "required": [
+          [
+            "ECE 189B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20189C"
+    },
+    {
+      "id": "ECE 192",
+      "code": "ECE 192",
+      "title": "Projects in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 4,
+      "description": "Projects in electrical and computer engineering for advanced undergraduate students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20192"
+    },
+    {
+      "id": "ECE 193",
+      "code": "ECE 193",
+      "title": "Internship in Industry",
+      "department": "ECE",
+      "units": 0,
+      "description": "Special projects for selected students. Offered in conjunction with engineering practice in selected industrial and research firms, under direct faculty supervision.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20193"
+    },
+    {
+      "id": "ECE 194A",
+      "code": "ECE 194A",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194A"
+    },
+    {
+      "id": "ECE 194AA",
+      "code": "ECE 194AA",
+      "title": "Micro-Electro-Mechanical Systems",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194AA"
+    },
+    {
+      "id": "ECE 194B",
+      "code": "ECE 194B",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: b. systems theory.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194B"
+    },
+    {
+      "id": "ECE 194BB",
+      "code": "ECE 194BB",
+      "title": "Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194BB"
+    },
+    {
+      "id": "ECE 194C",
+      "code": "ECE 194C",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: c. communication systems.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194C"
+    },
+    {
+      "id": "ECE 194D",
+      "code": "ECE 194D",
+      "title": "Special Topics in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194D"
+    },
+    {
+      "id": "ECE 194E",
+      "code": "ECE 194E",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194E"
+    },
+    {
+      "id": "ECE 194F",
+      "code": "ECE 194F",
+      "title": "Group Studies in Electrical and Computer Engineering: Solid State",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194F"
+    },
+    {
+      "id": "ECE 194G",
+      "code": "ECE 194G",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194G"
+    },
+    {
+      "id": "ECE 194M",
+      "code": "ECE 194M",
+      "title": "Special Topics in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194M"
+    },
+    {
+      "id": "ECE 194N",
+      "code": "ECE 194N",
+      "title": "Special Topics in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194N"
+    },
+    {
+      "id": "ECE 194O",
+      "code": "ECE 194O",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced studients who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: o. microprocessors and microprocessor based systems.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194O"
+    },
+    {
+      "id": "ECE 194Q",
+      "code": "ECE 194Q",
+      "title": "Special Topics in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194Q"
+    },
+    {
+      "id": "ECE 194R",
+      "code": "ECE 194R",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: r. general.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194R"
+    },
+    {
+      "id": "ECE 194T",
+      "code": "ECE 194T",
+      "title": "Group Studies in Electrical and Computer Engineering: Robot Control",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194T"
+    },
+    {
+      "id": "ECE 194U",
+      "code": "ECE 194U",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: u. optics/optoelectronics.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194U"
+    },
+    {
+      "id": "ECE 194V",
+      "code": "ECE 194V",
+      "title": "Special Topics in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194V"
+    },
+    {
+      "id": "ECE 194W",
+      "code": "ECE 194W",
+      "title": "Group Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum. Topics are coded as follows: w. computer network.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194W"
+    },
+    {
+      "id": "ECE 194Z",
+      "code": "ECE 194Z",
+      "title": "Nanotechnology",
+      "department": "ECE",
+      "units": 0,
+      "description": "Group studies intended for small number of advanced students who share an interest in a topic not included in the regular departmental curriculum.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20194Z"
+    },
+    {
+      "id": "ECE 196",
+      "code": "ECE 196",
+      "title": "Undergraduate Research",
+      "department": "ECE",
+      "units": 0,
+      "description": "Research opportunities for undergraduate students. students will be expected to give regular oral presentations, actively participate in a weekly seminar, and prepare at least one written report on their research.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20196"
+    },
+    {
+      "id": "ECE 199",
+      "code": "ECE 199",
+      "title": "Independent Studies in Electrical and Computer Engineering",
+      "department": "ECE",
+      "units": 0,
+      "description": "Directed individual study, normally experimental.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/ECE%20199"
+    },
+    {
+      "id": "MATH 2A",
+      "code": "MATH 2A",
+      "title": "Calculus with Algebra and Trigonometry",
+      "department": "MATH",
+      "units": 5,
+      "description": "Math 3A with precalculus: A function approach integrating algebra, trigonometry, and differential calculus. Topics include: one-on-one and onto functions; inverse functions; properties and graphs of polynomial, rational, exponential, and logarithmic functions; properties and graphs of trigonometric functions; analytic geometry; functions and limits; derivatives; techniques and applications of differentiation; introduction to integration; logarithmic and trigonometric functions.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%202A"
+    },
+    {
+      "id": "MATH 2B",
+      "code": "MATH 2B",
+      "title": "Calculus with Algebra and Trigonometry",
+      "department": "MATH",
+      "units": 5,
+      "description": "Math 3B with precalculus: A continued review of relevant topics from precalculus (see Math 2A); integral calculus, including definite and indefinite integrals; techniques of integration, introduction to sequences and series; with applications in mathematics and physics.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%202B"
+    },
+    {
+      "id": "MATH 3A",
+      "code": "MATH 3A",
+      "title": "Calculus with Applications, First Course",
+      "department": "MATH",
+      "units": 4,
+      "description": "Differential Calculus including analytic geometry, functions and limits, derivatives, techniques and applications of differentiation; introduction to integration; logarithmic and trigonometric functions.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%203A"
+    },
+    {
+      "id": "MATH 3B",
+      "code": "MATH 3B",
+      "title": "Calculus with Applications, Second Course",
+      "department": "MATH",
+      "units": 4,
+      "description": "Integral calculus including definite and indefinite integrals, techniques of integration; introduction to sequences and series; with applications in mathematics and physics.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%203B"
+    },
+    {
+      "id": "MATH 4A",
+      "code": "MATH 4A",
+      "title": "Linear Algebra with Applications",
+      "department": "MATH",
+      "units": 4,
+      "description": "Systems of linear equations, matrix algebra, determinants, vector spaces and subspaces, basis and dimension, linear transformations, eigenvalues and eigenvectors, diagonalization, and orthogonality.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 2B",
+            "MATH 3B",
+            "MATH 3BI"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204A"
+    },
+    {
+      "id": "MATH 4AI",
+      "code": "MATH 4AI",
+      "title": "Inquiry Based Linear Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "Honors version of Mathematics 4A. Mathematical inquiry course is developed through problem solving and discovery.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 3B",
+            "MATH 3BI"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204AI"
+    },
+    {
+      "id": "MATH 4B",
+      "code": "MATH 4B",
+      "title": "Differential Equations",
+      "department": "MATH",
+      "units": 4,
+      "description": "First and second order differential equations, separation of variables, linear differential equations, systems of first order equations, nonlinear differential equations and stability.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A",
+            "MATH 4AI"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204B"
+    },
+    {
+      "id": "MATH 4BI",
+      "code": "MATH 4BI",
+      "title": "Inquiry Based Differential Equations",
+      "department": "MATH",
+      "units": 4,
+      "description": "Honors version of Mathematics 4B. Mathematical inquiry course is developed through problem solving and discovery.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 3C"
+          ],
+          [
+            "MATH 3CI"
+          ],
+          [
+            "MATH 4A"
+          ],
+          [
+            "MATH 4AI"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204BI"
+    },
+    {
+      "id": "MATH 6A",
+      "code": "MATH 6A",
+      "title": "Vector Calculus with Applications, First Course",
+      "department": "MATH",
+      "units": 4,
+      "description": "Calculus of functions of several variables, vector valued functions of one variable, derivative and integrals of vector functions, double and triple integrals, properties and applications of integrals, change of variables.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A",
+            "MATH 4AI"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%206A"
+    },
+    {
+      "id": "MATH 6B",
+      "code": "MATH 6B",
+      "title": "Vector calculus with Applications, Second Course",
+      "department": "MATH",
+      "units": 4,
+      "description": "Scalar and vector fields, integration along paths, integration over surfaces and solid regions, integral theorems of vector calculus, Fourier series, partial differential equations.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 4BI"
+          ],
+          [
+            "MATH 6A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%206B"
+    },
+    {
+      "id": "MATH 7H",
+      "code": "MATH 7H",
+      "title": "Honors Seminar-Calculus",
+      "department": "MATH",
+      "units": 1,
+      "description": "Emphasizing fundamental concepts and applications. Intended for highly motivated and well prepared students.",
+      "prereqs": {
+        "required": [],
+        "concurrent": [
+          [
+            "MATH 3A",
+            "MATH 3B",
+            "MATH 3BI",
+            "MATH 3C",
+            "MATH 4A",
+            "MATH 4AI",
+            "MATH 4B",
+            "MATH 4BI",
+            "MATH 5A",
+            "MATH 5AI",
+            "MATH 6A",
+            "MATH 6AI",
+            "MATH 6B"
+          ]
+        ]
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%207H"
+    },
+    {
+      "id": "MATH 8",
+      "code": "MATH 8",
+      "title": "Transition to Higher Mathematics",
+      "department": "MATH",
+      "units": 5,
+      "description": "Introduction to the elements of propositional logic, techniques of mathematical proof, and fundamental mathematical structures, including sets, functions, relations, and other topics as time permits. Mastery of this material is essential for students planning to major in mathematics.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A",
+            "MATH 4AI",
+            "MATH 4B",
+            "MATH 4BI",
+            "MATH 6A",
+            "MATH 6B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%208"
+    },
+    {
+      "id": "MATH 34A",
+      "code": "MATH 34A",
+      "title": "Calculus for Social and Life Sciences",
+      "department": "MATH",
+      "units": 4,
+      "description": "Introduction to differential and integral calculus with applications to modeling in the biological sciences.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%2034A"
+    },
+    {
+      "id": "MATH 34B",
+      "code": "MATH 34B",
+      "title": "Calculus for Social and Life Sciences",
+      "department": "MATH",
+      "units": 4,
+      "description": "Continued study of differential and integral calculus with differential andintegral calculus with applications. Introduction to mathematical modeling with differential equations. Calculus of several variables including an introduction to partial derivatives.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%2034B"
+    },
+    {
+      "id": "MATH 94",
+      "code": "MATH 94",
+      "title": "Group Studies in Mathematics",
+      "department": "MATH",
+      "units": 1,
+      "description": "Lectures and discussions on special topics. Designed for transfer students only.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A",
+            "MATH 4AI",
+            "MATH 4B",
+            "MATH 4BI",
+            "MATH 6A",
+            "MATH 6B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%2094"
+    },
+    {
+      "id": "MATH 100A",
+      "code": "MATH 100A",
+      "title": "Mathematics for Elementary Teaching, I",
+      "department": "MATH",
+      "units": 3,
+      "description": "This class teaches ways to think about and explain elementary school mathematics. Topics include: cultural and base-n number systems, algorithms, elementary number theory, probability, and graphing.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20100A"
+    },
+    {
+      "id": "MATH 100B",
+      "code": "MATH 100B",
+      "title": "Mathematics for Elementary Teaching, II",
+      "department": "MATH",
+      "units": 3,
+      "description": "Completes the explanation of elementary school mathematics by discussing geometry and algebra. Discusses the pedagogy with the California mathematics framework, the NCTM standards, and \"replacement units\".",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 100A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20100B"
+    },
+    {
+      "id": "MATH 101A",
+      "code": "MATH 101A",
+      "title": "Classical Number Systems",
+      "department": "MATH",
+      "units": 4,
+      "description": "A development of classical number systems starting with natural numbers and progressing through the integral, rational, real and complex number systems. Includes an introduction to number theory, mathematical induction, the fundamental theorem of arithmetic and the Euclidean algorithm. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20101A"
+    },
+    {
+      "id": "MATH 101B",
+      "code": "MATH 101B",
+      "title": "Mathematical Systems",
+      "department": "MATH",
+      "units": 4,
+      "description": "The theory of operations within rings and fields. Polynomials, the fundamental theorem of algebra and other factorization theorems. Analyzing linear, polynomial, rational and exponential functions. Solving algebraic equations and inequalities. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 101A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20101B"
+    },
+    {
+      "id": "MATH 102A",
+      "code": "MATH 102A",
+      "title": "Modern Euclidean and Noneuclidean Geometry",
+      "department": "MATH",
+      "units": 4,
+      "description": "Topics in plane and solid geometry. The axioms of pure, euclidean, projective, and noneuclidean geometry. Transformational geometry (isometries, dilitations, involutions, perspectivities, and projectivities). The history and the historical implications of these developments in geometry. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20102A"
+    },
+    {
+      "id": "MATH 102B",
+      "code": "MATH 102B",
+      "title": "Modern Euclidean and Noneuclidean Geometry",
+      "department": "MATH",
+      "units": 4,
+      "description": "Topics in plane and solid geometry. The axioms of pure, euclidean, projective, and noneuclidean geometry. Transformational geometry (isometries, dilitations, involutions, perspectivities, and projectivities). The history and the historical implications of these developments in geometry. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 102A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20102B"
+    },
+    {
+      "id": "MATH 103",
+      "code": "MATH 103",
+      "title": "Introduction to Group Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Permutation groups, cyclic groups, theory of finite groups, group homomorphisms and isomorphisms, and Abelian groups. Applications to number theory and geometry.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20103"
+    },
+    {
+      "id": "MATH 104A",
+      "code": "MATH 104A",
+      "title": "Introduction Into Numerical Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Numerical methods for the solution of nonlinear equations (Newton method), for integration (quadrature formulas and composite integration), and for the initial value problem for ordinary differential equations (Euler and Kutta methods).",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 4BI"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 8",
+            "PSTAT 8"
+          ],
+          [
+            "MATH 117"
+          ],
+          [
+            "CMPSC 5AA",
+            "CMPSC 10",
+            "CMPSC 8",
+            "CMPSC 16",
+            "ENGR 3"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20104A"
+    },
+    {
+      "id": "MATH 104B",
+      "code": "MATH 104B",
+      "title": "Numerical Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Numerical methods for the solution of systems of linear equations (direct and iteractive methods), and the finite difference methods for boundary value problems for (ordinary and partial) differential equations.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 104A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20104B"
+    },
+    {
+      "id": "MATH 104C",
+      "code": "MATH 104C",
+      "title": "Advanced Topics in Numerical Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Topics in approximation theory; numerical methods for finding eigenvalues of a matrix; and advanced topics in numerical methods for ordinary and partial differential equations.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 104B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20104C"
+    },
+    {
+      "id": "MATH 108A",
+      "code": "MATH 108A",
+      "title": "Linear Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "Abstract vector spaces and subspaces. Span and linear independence. Basis and dimension. Linear maps. Eigenvalues and eigenvectors.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A"
+          ],
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20108A"
+    },
+    {
+      "id": "MATH 108B",
+      "code": "MATH 108B",
+      "title": "Linear Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "Diagonalization, inner product spaces, projections, least-squares approximations, invariant factors and elementary divisors, canonical forms, topics from advanced matrix theory, applied linear algebra, and group representation theory.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 108A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20108B"
+    },
+    {
+      "id": "MATH 108C",
+      "code": "MATH 108C",
+      "title": "Matrix Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Eigenvalues, eigenvectors and similarity; Unitary equivalence and normal matrices; QR factorization; Least squares; Singular Value decomposition; Moore-Penrose generalized inverse; Hermitian and symmetric matrices; Variational characterization of eigenvalues; Positive definite matrices; Nonnegative matrices; Perron-Frobenius Theorem.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 108A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20108C"
+    },
+    {
+      "id": "MATH 111A",
+      "code": "MATH 111A",
+      "title": "Abstract Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "An introduction to group theory, focusing on finite groups. Basic algebraic concepts including homomorphisms, normal subgroups, quotients, direct products and group actions. Classification of finitely generated Abelian groups. Other topics such as semidirect products and Sylow theorems as time permits.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 108A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20111A"
+    },
+    {
+      "id": "MATH 111B",
+      "code": "MATH 111B",
+      "title": "Abstract Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "Ring theory, ideals, factorization. Examples include number rings and polynomial rings. Module theory if time permits.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 111A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20111B"
+    },
+    {
+      "id": "MATH 111C",
+      "code": "MATH 111C",
+      "title": "Abstract Algebra",
+      "department": "MATH",
+      "units": 4,
+      "description": "Fields, field extensions, Galois theory.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 111B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20111C"
+    },
+    {
+      "id": "MATH 113",
+      "code": "MATH 113",
+      "title": "Non-euclidean Geometry",
+      "department": "MATH",
+      "units": 4,
+      "description": "An introduction to hyperbolic geometry with some discussion of other non-euclidean systems.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20113"
+    },
+    {
+      "id": "MATH 114",
+      "code": "MATH 114",
+      "title": "Computational Tools for Numerical Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Introduction to programming with specific examples in scientific computing. The algorithms used will be analyzed in detail in Math 104A-B-C. The emphasis will be the translation of numerical algorithms into actual working code.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 8"
+          ],
+          [
+            "MATH 108A",
+            "MATH 117"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20114"
+    },
+    {
+      "id": "MATH 115A",
+      "code": "MATH 115A",
+      "title": "Introduction to Number Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Number-theoretic functions, divisibility, congruences, primitive roots and indices, quadratic residues and the quadratic reciprocity law.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20115A"
+    },
+    {
+      "id": "MATH 115B",
+      "code": "MATH 115B",
+      "title": "Introduction to Number Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Selected topics at the discretion of the instructor.  Possibilities include (but are not limited to) Diophantine equations, the distribution of primes, number-theoretic methods in cryptography, quadratic forms, continued fractions, algebraic number theory, and partitions.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 115A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20115B"
+    },
+    {
+      "id": "MATH 115C",
+      "code": "MATH 115C",
+      "title": "Topics in Number Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Selected topics in number theory at the direction of the instructor.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20115C"
+    },
+    {
+      "id": "MATH 116",
+      "code": "MATH 116",
+      "title": "Combinatorial Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Elementary counting principles, binomial coefficients, generating functions, recurrence relations, the principle of inclusion and exclusion, distributions and partitions, systems of distinct representatives, applications to computation.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20116"
+    },
+    {
+      "id": "MATH 117",
+      "code": "MATH 117",
+      "title": "Methods of Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Introduction to methods of proof in analysis. topics include limits, sequences and series, continuity, compactness, as well as other topics. This course is intended to follow Mathematics 8 and to introduce students to the level of sophistication of upper-division mathematics.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8",
+            "PSTAT 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20117"
+    },
+    {
+      "id": "MATH 118A",
+      "code": "MATH 118A",
+      "title": "Real Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Axioms of the real numbers, topology of metric spaces, numerical sequences, infinite series.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 108A"
+          ],
+          [
+            "MATH 117"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20118A"
+    },
+    {
+      "id": "MATH 118B",
+      "code": "MATH 118B",
+      "title": "Real Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Real functions: continuity, differentiability, Riemann integrals, power and trigonometric series.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 108B"
+          ],
+          [
+            "MATH 118A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20118B"
+    },
+    {
+      "id": "MATH 118C",
+      "code": "MATH 118C",
+      "title": "Real Analysis",
+      "department": "MATH",
+      "units": 4,
+      "description": "Multivariable calculus and a selection of other topics including differential forms or Lebesgue integral.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 118B"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20118C"
+    },
+    {
+      "id": "MATH 119A",
+      "code": "MATH 119A",
+      "title": "Ordinary Differential Equations",
+      "department": "MATH",
+      "units": 4,
+      "description": "Existence, uniqueness, and stability; the geometry of phase space; linear systems and hyperbolicity; maps and diffeomorphisms.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 4BI"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20119A"
+    },
+    {
+      "id": "MATH 119B",
+      "code": "MATH 119B",
+      "title": "Chaotic Dynamics and Bifurcation Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Hyperbolic structure and chaos; center manifolds; bifurcation theory; and the Feigenbaum and Ruelle-Takens cascades to strange attractors.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 119A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20119B"
+    },
+    {
+      "id": "MATH 122A",
+      "code": "MATH 122A",
+      "title": "Theory of Complex Variables",
+      "department": "MATH",
+      "units": 4,
+      "description": "Complex numbers, complex differentiation, analytic functions, Cauchy-Riemann equations, Taylor and Laurent series, classification of singular points, residues, evaluation of improper integrals.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20122A"
+    },
+    {
+      "id": "MATH 122B",
+      "code": "MATH 122B",
+      "title": "Theory of Complex Variables",
+      "department": "MATH",
+      "units": 4,
+      "description": "The argument principle, Rouche’s theorem, analytic continuation, conformal mapping, fractional transformations and applications, infinite products, harmonic functions.  Other topics at the discretion of the instructor.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 122A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20122B"
+    },
+    {
+      "id": "MATH 124A",
+      "code": "MATH 124A",
+      "title": "Partial Differential Equations",
+      "department": "MATH",
+      "units": 4,
+      "description": "Wave, heat, and potential equations.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 4BI"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20124A"
+    },
+    {
+      "id": "MATH 124B",
+      "code": "MATH 124B",
+      "title": "Fourier Series and Numerical Methods",
+      "department": "MATH",
+      "units": 4,
+      "description": "Fourier series; generalized functions; and numerical methods.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4B",
+            "MATH 4BI"
+          ],
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 124A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20124B"
+    },
+    {
+      "id": "MATH 132A",
+      "code": "MATH 132A",
+      "title": "Optimization",
+      "department": "MATH",
+      "units": 4,
+      "description": "Global and local optimization, constrained and unconstrained optimization, convex versus nonconvex optimization, Projection Theorem, linear search methods, gradient methods, Newton and Quasi-Newton methods, trust region methods.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 108A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20132A"
+    },
+    {
+      "id": "MATH 132B",
+      "code": "MATH 132B",
+      "title": "Operations Research",
+      "department": "MATH",
+      "units": 4,
+      "description": "Large scale optimization, stochastic gradient descent, inexact Newton methods, limited memory BSGF, least squares problems, global optimization, optimization in general normed spaces.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 132A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20132B"
+    },
+    {
+      "id": "MATH 137A",
+      "code": "MATH 137A",
+      "title": "Graph and Network Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "Elements of graph and network theory including paths, circuits, trees, coloring, planarity, matching theory, Hall's theorem, applications to scheduling theory, flows in networks, Menger's theorem, and other topics as time permits.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 4A"
+          ],
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20137A"
+    },
+    {
+      "id": "MATH 137B",
+      "code": "MATH 137B",
+      "title": "Spectral Graph Theory",
+      "department": "MATH",
+      "units": 4,
+      "description": "The graph Laplacian, eigenvalues of weighted graphs and random walks, the normalized Laplacian and Cheegers inequality, diameters and eigenvalues, expander graphs, eigenvalues of symmetric graphs, heat kernels.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 108A"
+          ],
+          [
+            "MATH 137A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20137B"
+    },
+    {
+      "id": "MATH 145",
+      "code": "MATH 145",
+      "title": "Introduction to Topology",
+      "department": "MATH",
+      "units": 4,
+      "description": "Metric spaces, continuity, compactness, classification of surfaces, Euler characteristics, and fundamental groups. Additional topics at the discretion of the instructor.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ],
+          [
+            "MATH 108A",
+            "MATH 117"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20145"
+    },
+    {
+      "id": "MATH 147A",
+      "code": "MATH 147A",
+      "title": "Differential Geometry of Curves and Surfaces",
+      "department": "MATH",
+      "units": 4,
+      "description": "Curves and surfaces in three-dimensional Euclidean space, including Frenet formulas, signed curvature of plane curves, first and second fundamental forms, normal curvature and principal curvature, Gaussian and mean curvature, Gauss equation and Theorema Egregium, and a brief introduction to geodesics if time permits.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6A"
+          ],
+          [
+            "MATH 108A",
+            "MATH 117"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20147A"
+    },
+    {
+      "id": "MATH 147B",
+      "code": "MATH 147B",
+      "title": "Differential Geometry of Curves and Surfaces",
+      "department": "MATH",
+      "units": 4,
+      "description": "Parallel transport, geodesics, Gauss-Bonnet Theorem, fundamental theorem of surfaces. Additional topics at the discretion of the instructor may include minimal surfaces, Codazzi equation, surfaces of constant Gaussian curvature, isothermal coordinates, and global theorems for curves.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 6B"
+          ],
+          [
+            "MATH 147A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20147B"
+    },
+    {
+      "id": "MATH 170",
+      "code": "MATH 170",
+      "title": "Introduction to Mathematical Finance",
+      "department": "MATH",
+      "units": 4,
+      "description": "Describes mathematical methods for estimating and evaluating asset pricing models, equilibrium and derivative pricing, options, bonds, and the term-structure of interest rates. Also introduces finance optimization models for risk management and financial engineering.",
+      "prereqs": {
+        "required": [
+          [
+            "PSTAT 120A"
+          ],
+          [
+            "PSTAT 160A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20170"
+    },
+    {
+      "id": "MATH 181A",
+      "code": "MATH 181A",
+      "title": "Advanced Problem Solving in Mathematical, Historical and Pedagogical Contexts.",
+      "department": "MATH",
+      "units": 4,
+      "description": "Focuses on the representations, strategies, and language learners use to conceptualize and develop fundamental ideas of mathematics. Includes advanced mathematical problem solving and its implications for teaching and learning at the secondary level. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20181A"
+    },
+    {
+      "id": "MATH 181B",
+      "code": "MATH 181B",
+      "title": "Advanced Problem Solving in Mathematical, Historical, and Pedagogical Contexts",
+      "department": "MATH",
+      "units": 4,
+      "description": "Continuation of Math 181A or ED 134. Focuses on the representations, strategies, and language learners use to conceptualize and develop fundamental ideas of mathematics. Includes advanced mathematical problem solving and its implications for teaching and learning at the secondary level. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 181A",
+            "ED 134"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20181B"
+    },
+    {
+      "id": "MATH 182",
+      "code": "MATH 182",
+      "title": "History of Mathematics",
+      "department": "MATH",
+      "units": 4,
+      "description": "An examination of the major achievements in mathematical thinking throughout history. Topics may include the history of numerical systems in early civilizations, the development of formal proof, mathematical contributions from diverse populations and the impact of technological innovations on mathematics. Especially suitable for prospective middle and high school teachers.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20182"
+    },
+    {
+      "id": "MATH 190",
+      "code": "MATH 190",
+      "title": "Special Topics in Mathematics",
+      "department": "MATH",
+      "units": 4,
+      "description": "An advanced treatment of mathematics content appropriate for undergraduates.  The material for the course may come from algebra, geometry, analysis, applied mathematics or other areas of mathematics.  Topics vary by instructor.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 8"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20190"
+    },
+    {
+      "id": "MATH 193",
+      "code": "MATH 193",
+      "title": "Internship in Mathematics",
+      "department": "MATH",
+      "units": 0,
+      "description": "Faculty sponsored academic internship in industrial or research firms.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20193"
+    },
+    {
+      "id": "MATH 194GS",
+      "code": "MATH 194GS",
+      "title": "Group Studies for Advanced Students",
+      "department": "MATH",
+      "units": 1,
+      "description": "Participants will select a math-related book or papers, read the section before the next meeting and discuss reading at the meeting. Readings may include biographies of mathematicians, histories or popularizations of mathematics, textbooks, and readings in mathematical physics or biology.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20194GS"
+    },
+    {
+      "id": "MATH 197A",
+      "code": "MATH 197A",
+      "title": "Senior Thesis",
+      "department": "MATH",
+      "units": 0,
+      "description": "Independent research under the supervision of a faculty member which will result in a senior thesis. Student will concentrate on reading and gathering material for a thesis.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20197A"
+    },
+    {
+      "id": "MATH 197B",
+      "code": "MATH 197B",
+      "title": "Senior Thesis",
+      "department": "MATH",
+      "units": 0,
+      "description": "Independent research under the supervision of a faculty member which will result in a senior thesis. Student will concentrate on writing a thesis.",
+      "prereqs": {
+        "required": [
+          [
+            "MATH 197A"
+          ]
+        ],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20197B"
+    },
+    {
+      "id": "MATH 199",
+      "code": "MATH 199",
+      "title": "Independent Studies in Mathematics",
+      "department": "MATH",
+      "units": 0,
+      "description": "Coursework consists of academic research supervised by a faculty member on a topic not available in established course offerings.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20199"
+    },
+    {
+      "id": "MATH 199RA",
+      "code": "MATH 199RA",
+      "title": "Independent Research Assistance",
+      "department": "MATH",
+      "units": 0,
+      "description": "Coursework consists of faculty supervised research assistance.",
+      "prereqs": {
+        "required": [],
+        "concurrent": []
+      },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%20199RA"
+    }
+  ]
+}

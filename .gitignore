@@ -1,0 +1,5 @@
+# a .env file is not actually needed
+.env
+info.txt
+__pycache__/
+

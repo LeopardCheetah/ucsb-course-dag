@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UCSB Course Graph</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+
+<style>
+  /* ── Variables ─────────────────────────────────────────────────── */
+  :root {
+    --bg:           #0a0a0f;
+    --surface:      #111118;
+    --surface2:     #1a1a24;
+    --border:       #2a2a3a;
+    --border-bright:#3d3d55;
+    --text:         #e8e8f0;
+    --text-dim:     #7a7a9a;
+    --text-dimmer:  #4a4a6a;
+
+    --MATH:   #4e9eff;
+    --CMPSC:  #a78bfa;
+    --ECE:    #34d399;
+    --PHYS:   #fb923c;
+    --PSTAT:  #f472b6;
+    --ENGR:   #facc15;
+    --CHEM:   #67e8f9;
+    --OTHER:  #94a3b8;
+
+    --edge-required:   #3d3d55;
+    --edge-concurrent: #2a3a2a;
+    --edge-highlight:  #ffffff;
+
+    --panel-w: 340px;
+    --header-h: 52px;
+  }
+
+  /* ── Reset ─────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ────────────────────────────────────────────────────── */
+  header {
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  header h1 span {
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  .header-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── Search ─────────────────────────────────────────────────────── */
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 6px 10px 6px 32px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  #search:focus { border-color: var(--border-bright); }
+  #search::placeholder { color: var(--text-dimmer); }
+
+  /* ── Dept filters ───────────────────────────────────────────────── */
+  .dept-filters {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .dept-filters::-webkit-scrollbar { display: none; }
+
+  .dept-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid currentColor;
+    cursor: pointer;
+    background: transparent;
+    opacity: 0.35;
+    transition: opacity 0.15s, background 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .dept-btn.active { opacity: 1; background: color-mix(in srgb, currentColor 15%, transparent); }
+  .dept-btn:hover  { opacity: 0.75; }
+
+  /* ── Layout: sidebar + canvas ───────────────────────────────────── */
+  .body-wrap {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Cytoscape canvas ───────────────────────────────────────────── */
+  #cy {
+    flex: 1;
+    background: var(--bg);
+    /* subtle grid */
+    background-image:
+      linear-gradient(var(--surface) 1px, transparent 1px),
+      linear-gradient(90deg, var(--surface) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── Side panel ─────────────────────────────────────────────────── */
+  #panel {
+    width: var(--panel-w);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    transform: translateX(var(--panel-w));
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  #panel.open { transform: translateX(0); }
+
+  .panel-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .panel-code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .panel-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .panel-body::-webkit-scrollbar { width: 4px; }
+  .panel-body::-webkit-scrollbar-track { background: transparent; }
+  .panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .panel-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dimmer);
+    margin-bottom: 8px;
+  }
+
+  .panel-desc {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+
+  /* prereq groups */
+  .prereq-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .prereq-group-label {
+    font-size: 10px;
+    color: var(--text-dimmer);
+    font-style: italic;
+    margin-bottom: 2px;
+  }
+
+  .prereq-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .prereq-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 4px;
+    border: 1px solid var(--border-bright);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    user-select: none;
+  }
+
+  .prereq-chip:hover {
+    background: var(--border);
+    border-color: var(--text-dim);
+  }
+
+  .prereq-chip.exists { border-color: currentColor; }
+
+  .or-label {
+    font-size: 10px;
+    color: var(--text-dimmer);
+    align-self: center;
+    font-style: italic;
+    padding: 0 2px;
+  }
+
+  .panel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    transition: border-color 0.12s, color 0.12s;
+    margin-top: 4px;
+    align-self: flex-start;
+  }
+
+  .panel-link:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 26px;
+    height: 26px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    transition: color 0.12s, border-color 0.12s;
+  }
+  .close-btn:hover { color: var(--text); border-color: var(--border-bright); }
+
+  /* ── Legend ─────────────────────────────────────────────────────── */
+  #legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .legend-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--text-dimmer);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-line {
+    width: 20px;
+    height: 2px;
+    flex-shrink: 0;
+    border-radius: 1px;
+  }
+
+  /* ── Controls ───────────────────────────────────────────────────── */
+  #controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 5;
+  }
+
+  .ctrl-btn {
+    width: 34px;
+    height: 34px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 16px;
+    transition: color 0.12s, border-color 0.12s;
+    user-select: none;
+  }
+  .ctrl-btn:hover { color: var(--text); border-color: var(--border-bright); }
+
+  /* ── Tooltip ────────────────────────────────────────────────────── */
+  #tooltip {
+    position: absolute;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    border-radius: 6px;
+    padding: 7px 11px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    pointer-events: none;
+    display: none;
+    z-index: 20;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+
+  /* ── Loading ────────────────────────────────────────────────────── */
+  #loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    z-index: 100;
+    gap: 14px;
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--border);
+    border-top-color: var(--text-dim);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #loading p {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-dimmer);
+  }
+
+  /* ── Empty-state ────────────────────────────────────────────────── */
+  #empty {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  #empty p {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <h1>UCSB <span>/</span> Course Graph</h1>
+  <div class="header-sep"></div>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="search" type="text" placeholder="Search courses…" autocomplete="off"/>
+  </div>
+  <div class="dept-filters" id="deptFilters"></div>
+</header>
+
+<!-- Body -->
+<div class="body-wrap">
+  <div id="cy"></div>
+
+  <!-- Side panel -->
+  <div id="panel">
+    <div class="panel-header" style="position:relative">
+      <div class="panel-code" id="pCode"></div>
+      <div class="panel-title" id="pTitle"></div>
+      <div class="panel-meta" id="pMeta"></div>
+      <button class="close-btn" id="closePanel" title="Close">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-body" id="pBody"></div>
+  </div>
+</div>
+
+<!-- Overlays -->
+<div id="legend">
+  <div class="legend-title">Legend</div>
+  <div id="legendDepts"></div>
+  <div style="height:4px"></div>
+  <div class="legend-item">
+    <div class="legend-line" style="background:var(--edge-required);border-top:1px dashed #3d3d55;height:0"></div>
+    <span>Prerequisite</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-line" style="background:#2a4a2a;border-top:1px dashed #2a5a2a;height:0"></div>
+    <span>Concurrent</span>
+  </div>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="btnFit" title="Fit to screen">⊡</button>
+  <button class="ctrl-btn" id="btnZoomIn" title="Zoom in">+</button>
+  <button class="ctrl-btn" id="btnZoomOut" title="Zoom out">−</button>
+</div>
+
+<div id="tooltip"></div>
+<div id="loading"><div class="spinner"></div><p>Building graph…</p></div>
+<div id="empty"><p>No courses match the current filters.</p></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// DATA — replace this with a fetch() of your ucsb_courses_viz.json if serving
+// from a local server, or paste the full JSON inline below.
+// To load from file: replace the COURSE_DATA block with:
+//   const COURSE_DATA = await fetch('ucsb_courses_viz.json').then(r => r.json());
+// ─────────────────────────────────────────────────────────────────────────────
+
+const COURSE_DATA = {
+  "meta": {
+    "departments": ["CMPSC","MATH"],
+    "total_courses": 6
+  },
+  "courses": [
+    {
+      "id": "CMPSC 16", "code": "CMPSC 16", "title": "Problem Solving with Computers I",
+      "department": "CMPSC", "units": 4,
+      "description": "Fundamental building blocks for solving problems using computers. Topics include basic computer organization and programming constructs: memory CPU, binary arithmetic, variables, expressions, statements, conditionals, iteration, functions, parameters, recursion, primitive and composite data types, and basic operating system and debugging tools.",
+      "prereqs": { "required": [["CMPSC 8","ENGR 3","ECE 3"]], "concurrent": [["MATH 3A","MATH 2A"]] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2016"
+    },
+    {
+      "id": "CMPSC 24", "code": "CMPSC 24", "title": "Problem Solving with Computers II",
+      "department": "CMPSC", "units": 4,
+      "description": "Object oriented programming and data structures. Linked lists, stacks, queues, trees. Algorithm analysis and recursion.",
+      "prereqs": { "required": [["CMPSC 16"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2024"
+    },
+    {
+      "id": "CMPSC 40", "code": "CMPSC 40", "title": "Foundations of Computer Science",
+      "department": "CMPSC", "units": 4,
+      "description": "Propositional and predicate logic, sets, functions, relations, induction, recursion, combinatorics, graph theory.",
+      "prereqs": { "required": [["CMPSC 16"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%2040"
+    },
+    {
+      "id": "CMPSC 130A", "code": "CMPSC 130A", "title": "Data Structures and Algorithms I",
+      "department": "CMPSC", "units": 4,
+      "description": "Algorithm design and analysis. Sorting, searching, hashing, graphs, dynamic programming.",
+      "prereqs": { "required": [["CMPSC 40","MATH 8"],["CMPSC 24","CMPSC 9"]], "concurrent": [["PSTAT 120A","ECE 139"]] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20130A"
+    },
+    {
+      "id": "CMPSC 148", "code": "CMPSC 148", "title": "Computer Science Project",
+      "department": "CMPSC", "units": 4,
+      "description": "Team-based software development project. Agile methodology, version control, testing, deployment.",
+      "prereqs": { "required": [["CMPSC 48","CMPSC 56","CMPSC 148","CMPSC 156","CMPSC 172"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/CMPSC%20148"
+    },
+    {
+      "id": "MATH 2A", "code": "MATH 2A", "title": "Calculus with Algebra and Trigonometry",
+      "department": "MATH", "units": 5,
+      "description": "Math 3A with precalculus: A function approach integrating algebra, trigonometry, and differential calculus.",
+      "prereqs": { "required": [], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%202A"
+    },
+    {
+      "id": "MATH 3A", "code": "MATH 3A", "title": "Calculus with Applications, First Course",
+      "department": "MATH", "units": 4,
+      "description": "Differential calculus including analytic geometry, functions and limits, derivatives, techniques and applications of differentiation.",
+      "prereqs": { "required": [], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%203A"
+    },
+    {
+      "id": "MATH 4A", "code": "MATH 4A", "title": "Calculus, First Course",
+      "department": "MATH", "units": 4,
+      "description": "Limits and continuity. Differentiation: basic rules, chain rule, implicit differentiation, related rates, applications.",
+      "prereqs": { "required": [["MATH 3A","MATH 2A"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204A"
+    },
+    {
+      "id": "MATH 4B", "code": "MATH 4B", "title": "Differential Equations",
+      "department": "MATH", "units": 4,
+      "description": "First and second order differential equations, separation of variables, linear differential equations, systems.",
+      "prereqs": { "required": [["MATH 4A","MATH 4AI"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%204B"
+    },
+    {
+      "id": "MATH 8", "code": "MATH 8", "title": "Introduction to Abstract Mathematics",
+      "department": "MATH", "units": 4,
+      "description": "Introduction to formal mathematical reasoning: logic, sets, functions, relations, and proof techniques.",
+      "prereqs": { "required": [["MATH 3B","MATH 2B"]], "concurrent": [] },
+      "catalog_url": "https://catalog.ucsb.edu/courses/MATH%208"
+    }
+  ]
+};
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// To load your REAL json file instead, uncomment below and comment out the
+// COURSE_DATA block above, then serve this file with a local HTTP server
+// (e.g. python -m http.server 8000) and open http://localhost:8000
+// ─────────────────────────────────────────────────────────────────────────────
+// const COURSE_DATA = await fetch('ucsb_courses_viz.json').then(r => r.json());
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COLOUR MAP
+// ─────────────────────────────────────────────────────────────────────────────
+const DEPT_COLORS = {
+  MATH:  '#4e9eff',
+  CMPSC: '#a78bfa',
+  ECE:   '#34d399',
+  PHYS:  '#fb923c',
+  PSTAT: '#f472b6',
+  ENGR:  '#facc15',
+  CHEM:  '#67e8f9',
+};
+const deptColor = d => DEPT_COLORS[d] ?? '#94a3b8';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BUILD CYTOSCAPE ELEMENTS
+// ─────────────────────────────────────────────────────────────────────────────
+function buildElements(courses) {
+  const knownIds = new Set(courses.map(c => c.id));
+  const nodes = [];
+  const edges = [];
+  const edgeSet = new Set();
+
+  for (const c of courses) {
+    nodes.push({
+      data: {
+        id:         c.id,
+        label:      c.code,
+        title:      c.title,
+        dept:       c.department,
+        units:      c.units,
+        color:      deptColor(c.department),
+        course:     c,           // full data for panel
+      }
+    });
+
+    // Required prereq edges (solid arrow)
+    for (const group of c.prereqs.required) {
+      for (const prereq of group) {
+        const key = `${prereq}→${c.id}`;
+        if (!edgeSet.has(key)) {
+          edgeSet.add(key);
+          edges.push({
+            data: {
+              id:     key,
+              source: prereq,
+              target: c.id,
+              kind:   'required',
+              // if prereq is outside our dataset, it's a ghost node
+              ghost:  !knownIds.has(prereq),
+            }
+          });
+          // Create ghost node if prereq not in dataset
+          if (!knownIds.has(prereq)) {
+            const ghostDept = prereq.split(' ')[0];
+            nodes.push({
+              data: {
+                id:    prereq,
+                label: prereq,
+                title: prereq,
+                dept:  ghostDept,
+                units: 0,
+                color: deptColor(ghostDept),
+                ghost: true,
+                course: null,
+              }
+            });
+            knownIds.add(prereq);
+          }
+        }
+      }
+    }
+
+    // Concurrent edges (dashed)
+    for (const group of c.prereqs.concurrent) {
+      for (const prereq of group) {
+        const key = `${prereq}~~${c.id}`;
+        if (!edgeSet.has(key)) {
+          edgeSet.add(key);
+          edges.push({
+            data: {
+              id:     key,
+              source: prereq,
+              target: c.id,
+              kind:   'concurrent',
+              ghost:  !knownIds.has(prereq),
+            }
+          });
+          if (!knownIds.has(prereq)) {
+            const ghostDept = prereq.split(' ')[0];
+            nodes.push({
+              data: {
+                id:    prereq,
+                label: prereq,
+                title: prereq,
+                dept:  ghostDept,
+                units: 0,
+                color: deptColor(ghostDept),
+                ghost: true,
+                course: null,
+              }
+            });
+            knownIds.add(prereq);
+          }
+        }
+      }
+    }
+  }
+
+  return [...nodes, ...edges];
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CYTOSCAPE STYLESHEET
+// ─────────────────────────────────────────────────────────────────────────────
+const CY_STYLE = [
+  {
+    selector: 'node',
+    style: {
+      'width':              60,
+      'height':             60,
+      'shape':              'round-rectangle',
+      'background-color':   'data(color)',
+      'background-opacity': 0.12,
+      'border-color':       'data(color)',
+      'border-width':       1.5,
+      'border-opacity':     0.6,
+      'label':              'data(label)',
+      'color':              'data(color)',
+      'font-family':        'Space Mono',
+      'font-size':          9,
+      'font-weight':        700,
+      'text-valign':        'center',
+      'text-halign':        'center',
+      'text-wrap':          'wrap',
+      'text-max-width':     52,
+      'transition-property':'background-opacity border-opacity border-width',
+      'transition-duration':'0.15s',
+    }
+  },
+  {
+    selector: 'node[?ghost]',
+    style: {
+      'border-style':   'dashed',
+      'border-opacity': 0.3,
+      'background-opacity': 0.05,
+      'color':          '#4a4a6a',
+      'font-size':      8,
+    }
+  },
+  {
+    selector: 'node:selected, node.highlighted',
+    style: {
+      'background-opacity': 0.28,
+      'border-opacity':     1,
+      'border-width':       2.5,
+      'z-index':            10,
+    }
+  },
+  {
+    selector: 'node.ancestor',
+    style: {
+      'background-opacity': 0.2,
+      'border-opacity':     0.8,
+      'border-width':       2,
+    }
+  },
+  {
+    selector: 'node.descendant',
+    style: {
+      'background-opacity': 0.2,
+      'border-opacity':     0.8,
+    }
+  },
+  {
+    selector: 'node.dimmed',
+    style: {
+      'background-opacity': 0.03,
+      'border-opacity':     0.12,
+      'color':              '#2a2a3a',
+    }
+  },
+  {
+    selector: 'edge',
+    style: {
+      'width':              1.2,
+      'line-color':         '#3d3d55',
+      'target-arrow-color': '#3d3d55',
+      'target-arrow-shape': 'triangle',
+      'arrow-scale':        0.7,
+      'curve-style':        'bezier',
+      'opacity':            0.6,
+      'transition-property':'opacity line-color',
+      'transition-duration':'0.15s',
+    }
+  },
+  {
+    selector: 'edge[kind="concurrent"]',
+    style: {
+      'line-style':   'dashed',
+      'line-color':   '#2a4a2a',
+      'target-arrow-color': '#2a4a2a',
+      'line-dash-pattern': [4, 3],
+    }
+  },
+  {
+    selector: 'edge.highlighted',
+    style: {
+      'line-color':         '#ffffff',
+      'target-arrow-color': '#ffffff',
+      'opacity':            1,
+      'width':              2,
+    }
+  },
+  {
+    selector: 'edge.dimmed',
+    style: {
+      'opacity': 0.05,
+    }
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAIN
+// ─────────────────────────────────────────────────────────────────────────────
+(function main() {
+  const courses    = COURSE_DATA.courses;
+  const allDepts   = [...new Set(courses.map(c => c.department))].sort();
+  let   activeDepts = new Set(allDepts);
+  let   searchQuery = '';
+  let   cy;
+
+  // ── Build dept filter buttons ──────────────────────────────────────────────
+  const filtersEl = document.getElementById('deptFilters');
+  // "All" toggle
+  const allBtn = document.createElement('button');
+  allBtn.className = 'dept-btn active';
+  allBtn.textContent = 'ALL';
+  allBtn.style.color = '#e8e8f0';
+  allBtn.dataset.dept = '__all__';
+  filtersEl.appendChild(allBtn);
+
+  for (const dept of allDepts) {
+    const btn = document.createElement('button');
+    btn.className   = 'dept-btn active';
+    btn.textContent = dept;
+    btn.style.color = deptColor(dept);
+    btn.dataset.dept = dept;
+    filtersEl.appendChild(btn);
+  }
+
+  // ── Build legend dept rows ─────────────────────────────────────────────────
+  const legendDepts = document.getElementById('legendDepts');
+  for (const dept of allDepts) {
+    const row = document.createElement('div');
+    row.className = 'legend-item';
+    row.innerHTML = `
+      <div class="legend-dot" style="background:${deptColor(dept)};opacity:0.7"></div>
+      <span>${dept}</span>`;
+    legendDepts.appendChild(row);
+  }
+
+  // ── Init Cytoscape ─────────────────────────────────────────────────────────
+  function initCy(elements) {
+    if (cy) cy.destroy();
+
+    cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements,
+      style: CY_STYLE,
+      layout: {
+        name:       'dagre',
+        rankDir:    'BT',        // bottom-to-top: prereqs below, advanced above
+        nodeSep:    40,
+        rankSep:    80,
+        edgeSep:    20,
+        padding:    60,
+        animate:    false,
+      },
+      wheelSensitivity: 0.3,
+      minZoom: 0.15,
+      maxZoom: 3,
+    });
+
+    bindEvents();
+    document.getElementById('loading').style.display = 'none';
+  }
+
+  // ── Bind interactions ──────────────────────────────────────────────────────
+  function bindEvents() {
+    const tooltip = document.getElementById('tooltip');
+
+    // Hover tooltip
+    cy.on('mouseover', 'node', e => {
+      const d = e.target.data();
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `<strong>${d.label}</strong><br>${d.title}` +
+        (d.units ? `<br><span style="color:var(--text-dimmer)">${d.units} units</span>` : '');
+    });
+
+    cy.on('mousemove', e => {
+      if (tooltip.style.display === 'block') {
+        tooltip.style.left = (e.originalEvent.clientX + 14) + 'px';
+        tooltip.style.top  = (e.originalEvent.clientY - 10) + 'px';
+      }
+    });
+
+    cy.on('mouseout', 'node', () => { tooltip.style.display = 'none'; });
+
+    // Click node -> highlight ancestry + show panel
+    cy.on('tap', 'node', e => {
+      const node = e.target;
+      const data = node.data();
+      if (data.ghost && !data.course) return;
+
+      clearHighlight();
+      highlightNode(node);
+      if (data.course) openPanel(data.course);
+    });
+
+    // Click background -> clear
+    cy.on('tap', e => {
+      if (e.target === cy) {
+        clearHighlight();
+        closePanel();
+      }
+    });
+  }
+
+  // ── Highlight ──────────────────────────────────────────────────────────────
+  function highlightNode(node) {
+    cy.elements().addClass('dimmed');
+
+    // Predecessors (prereqs of this course, recursively)
+    const ancestors = node.predecessors();
+    // Successors (courses that depend on this one)
+    const descendants = node.successors();
+
+    ancestors.nodes().addClass('ancestor').removeClass('dimmed');
+    ancestors.edges().addClass('highlighted').removeClass('dimmed');
+    descendants.nodes().addClass('descendant').removeClass('dimmed');
+    descendants.edges().addClass('highlighted').removeClass('dimmed');
+    node.addClass('highlighted').removeClass('dimmed');
+  }
+
+  function clearHighlight() {
+    cy.elements()
+      .removeClass('dimmed highlighted ancestor descendant');
+  }
+
+  // ── Panel ──────────────────────────────────────────────────────────────────
+  const panel = document.getElementById('panel');
+
+  function openPanel(course) {
+    document.getElementById('pCode').textContent  = course.code;
+    document.getElementById('pCode').style.color  = deptColor(course.department);
+    document.getElementById('pTitle').textContent = course.title;
+
+    const meta = document.getElementById('pMeta');
+    meta.innerHTML = '';
+    const addPill = t => {
+      const p = document.createElement('span');
+      p.className = 'pill';
+      p.textContent = t;
+      meta.appendChild(p);
+    };
+    addPill(course.department);
+    if (course.units) addPill(course.units + ' units');
+
+    const body = document.getElementById('pBody');
+    body.innerHTML = '';
+
+    // Description
+    if (course.description) {
+      const sec = document.createElement('div');
+      sec.innerHTML = `<div class="panel-section-label">Description</div>
+                       <div class="panel-desc">${course.description}</div>`;
+      body.appendChild(sec);
+    }
+
+    // Prerequisites
+    const req = course.prereqs.required;
+    const conc = course.prereqs.concurrent;
+
+    if (req.length || conc.length) {
+      const sec = document.createElement('div');
+      sec.innerHTML = `<div class="panel-section-label">Prerequisites</div>`;
+
+      if (req.length) {
+        const groupsEl = document.createElement('div');
+        groupsEl.style.display = 'flex';
+        groupsEl.style.flexDirection = 'column';
+        groupsEl.style.gap = '8px';
+
+        req.forEach((group, gi) => {
+          const g = document.createElement('div');
+          g.className = 'prereq-group';
+          if (req.length > 1) {
+            const lbl = document.createElement('div');
+            lbl.className = 'prereq-group-label';
+            lbl.textContent = `Requirement ${gi + 1}`;
+            g.appendChild(lbl);
+          }
+          const chips = document.createElement('div');
+          chips.className = 'prereq-chips';
+          group.forEach((code, i) => {
+            if (i > 0) {
+              const or = document.createElement('span');
+              or.className = 'or-label';
+              or.textContent = 'or';
+              chips.appendChild(or);
+            }
+            const chip = makeChip(code);
+            chips.appendChild(chip);
+          });
+          g.appendChild(chips);
+          groupsEl.appendChild(g);
+        });
+        sec.appendChild(groupsEl);
+      }
+
+      if (conc.length) {
+        const concLabel = document.createElement('div');
+        concLabel.className = 'panel-section-label';
+        concLabel.style.marginTop = '12px';
+        concLabel.textContent = 'Concurrent Enrollment';
+        sec.appendChild(concLabel);
+
+        const chips = document.createElement('div');
+        chips.className = 'prereq-chips';
+        conc.flat().forEach(code => chips.appendChild(makeChip(code)));
+        sec.appendChild(chips);
+      }
+
+      body.appendChild(sec);
+    } else {
+      const sec = document.createElement('div');
+      sec.innerHTML = `<div class="panel-section-label">Prerequisites</div>
+                       <div class="panel-desc" style="font-style:italic;color:var(--text-dimmer)">None</div>`;
+      body.appendChild(sec);
+    }
+
+    // Catalog link
+    if (course.catalog_url) {
+      const sec = document.createElement('div');
+      sec.innerHTML = `<a class="panel-link" href="${course.catalog_url}" target="_blank">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        UCSB Catalog
+      </a>`;
+      body.appendChild(sec);
+    }
+
+    panel.classList.add('open');
+  }
+
+  function makeChip(code) {
+    const dept = code.split(' ')[0];
+    const exists = cy && cy.getElementById(code).length > 0;
+    const chip = document.createElement('span');
+    chip.className = 'prereq-chip' + (exists ? ' exists' : '');
+    chip.textContent = code;
+    chip.style.color = deptColor(dept);
+    chip.style.borderColor = exists ? deptColor(dept) : '';
+    if (exists) {
+      chip.addEventListener('click', () => {
+        const node = cy.getElementById(code);
+        if (node.length) {
+          cy.animate({ fit: { eles: node.neighborhood().add(node), padding: 80 }, duration: 400 });
+          clearHighlight();
+          highlightNode(node);
+          openPanel(node.data('course'));
+        }
+      });
+    }
+    return chip;
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+  }
+
+  document.getElementById('closePanel').addEventListener('click', () => {
+    clearHighlight();
+    closePanel();
+  });
+
+  // ── Dept filter + search ───────────────────────────────────────────────────
+  function getVisibleCourses() {
+    const q = searchQuery.toLowerCase();
+    return courses.filter(c => {
+      if (!activeDepts.has(c.department)) return false;
+      if (!q) return true;
+      return (
+        c.code.toLowerCase().includes(q) ||
+        c.title.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q)
+      );
+    });
+  }
+
+  function refresh() {
+    const visible = getVisibleCourses();
+    const empty = document.getElementById('empty');
+
+    if (!visible.length) {
+      empty.style.display = 'flex';
+    } else {
+      empty.style.display = 'none';
+    }
+
+    document.getElementById('loading').style.display = 'flex';
+    // small delay so spinner shows before blocking layout calc
+    setTimeout(() => initCy(buildElements(visible)), 30);
+  }
+
+  // Dept button clicks
+  filtersEl.addEventListener('click', e => {
+    const btn = e.target.closest('.dept-btn');
+    if (!btn) return;
+    const dept = btn.dataset.dept;
+
+    if (dept === '__all__') {
+      const allActive = activeDepts.size === allDepts.length;
+      if (allActive) {
+        activeDepts.clear();
+        filtersEl.querySelectorAll('.dept-btn:not([data-dept="__all__"])').forEach(b => b.classList.remove('active'));
+        allBtn.classList.remove('active');
+      } else {
+        activeDepts = new Set(allDepts);
+        filtersEl.querySelectorAll('.dept-btn').forEach(b => b.classList.add('active'));
+      }
+    } else {
+      if (activeDepts.has(dept)) {
+        activeDepts.delete(dept);
+        btn.classList.remove('active');
+      } else {
+        activeDepts.add(dept);
+        btn.classList.add('active');
+      }
+      allBtn.classList.toggle('active', activeDepts.size === allDepts.length);
+    }
+
+    closePanel();
+    clearHighlight();
+    refresh();
+  });
+
+  // Search
+  let searchTimer;
+  document.getElementById('search').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchQuery = e.target.value;
+    searchTimer = setTimeout(() => {
+      closePanel();
+      refresh();
+    }, 200);
+  });
+
+  // Controls
+  document.getElementById('btnFit').addEventListener('click', () => cy?.fit(60));
+  document.getElementById('btnZoomIn').addEventListener('click',  () => cy?.zoom({ level: cy.zoom() * 1.3, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } }));
+  document.getElementById('btnZoomOut').addEventListener('click', () => cy?.zoom({ level: cy.zoom() * 0.75, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } }));
+
+  // ── Initial render ─────────────────────────────────────────────────────────
+  refresh();
+})();
+</script>
+</body>
+</html>

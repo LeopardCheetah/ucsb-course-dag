@@ -1,0 +1,866 @@
+<!-- note: this is based off of v8 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Graph</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090f;--sf:#0c0f18;--s2:#10141f;--bd:#1a2035;--ac:#38bdf8;--a2:#fb923c;--tx:#cdd5e0;--mu:#3d4a60;--glow:0 0 16px rgba(56,189,248,.15)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);background-size:50px 50px}
+
+  header{position:relative;z-index:10;padding:7px 14px;border-bottom:1px solid var(--bd);
+    background:rgba(7,9,15,.97);backdrop-filter:blur(16px);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:46px}
+  .logo{font-size:.88rem;font-weight:800;letter-spacing:-.02em;color:var(--ac);text-shadow:var(--glow);white-space:nowrap}
+  .logo span{color:var(--mu);font-weight:400}
+  .sep{width:1px;height:20px;background:var(--bd);flex-shrink:0}
+  .ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex:1}
+
+  .btn{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;padding:4px 9px;
+    border:1px solid var(--bd);background:var(--sf);color:var(--tx);cursor:pointer;
+    transition:all .15s;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+  .btn:hover{border-color:var(--ac);color:var(--ac);box-shadow:var(--glow)}
+  .btn.on{border-color:var(--ac);color:var(--ac);background:rgba(56,189,248,.07)}
+  .btn.w{border-color:var(--a2);color:var(--a2)}.btn.w.on{background:rgba(251,146,60,.07)}
+
+  select,.srch{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:4px 7px;
+    background:var(--sf);border:1px solid var(--bd);color:var(--tx);outline:none;transition:border-color .15s}
+  select:focus,.srch:focus{border-color:var(--ac)}
+  .srch{width:130px}.srch::placeholder{color:var(--mu)}
+
+  .chips{display:flex;gap:4px;margin-left:auto}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:.56rem;padding:2px 6px;border:1px solid var(--bd);color:var(--mu);background:var(--sf)}
+  .chip strong{color:var(--ac)}
+
+  #wrap{flex:1;position:relative;z-index:1;display:flex;flex-direction:column;min-height:0}
+  #main-cy{width:100%;flex:1;min-height:0}
+
+  /* parking lot */
+  #pk-wrap{border-top:1px solid var(--bd);background:rgba(10,13,20,.95);transition:height .25s ease;overflow:hidden;flex-shrink:0}
+  #pk-hdr{height:28px;display:flex;align-items:center;gap:8px;padding:0 12px;cursor:pointer;user-select:none;flex-shrink:0}
+  .ph-label{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:var(--mu);letter-spacing:.08em;text-transform:uppercase}
+  .ph-n{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--ac)}
+  .ph-tog{margin-left:auto;font-size:.62rem;color:var(--mu);transition:transform .2s}
+  #pk-cy{width:100%;height:calc(100% - 28px)}
+
+  /* drop */
+  #drop{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;gap:14px;background:var(--bg)}
+  .dbox{border:2px dashed var(--bd);padding:44px 64px;text-align:center;transition:all .3s;cursor:pointer}
+  .dbox:hover,.dbox.over{border-color:var(--ac);box-shadow:var(--glow),inset 0 0 28px rgba(56,189,248,.04)}
+  .dico{font-size:1.8rem;margin-bottom:10px;opacity:.28}.dtitle{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+  .dsub{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--mu);margin-bottom:14px}
+  #finput{display:none}.ordiv{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--mu);letter-spacing:.1em}
+
+  /* loading */
+  #loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(7,9,15,.92);z-index:50;flex-direction:column;gap:9px}
+  .lrow{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ac);letter-spacing:.08em;display:flex;align-items:center;gap:7px}
+  .spin{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  #lsub{font-family:'JetBrains Mono',monospace;font-size:.53rem;color:var(--mu)}
+
+  #err{display:none;position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:100;
+    background:#2a0808;border:1px solid #ef4444;color:#fca5a5;
+    font-family:'JetBrains Mono',monospace;font-size:.64rem;padding:7px 14px;max-width:400px;text-align:center}
+
+  /* tooltip */
+  #tip{position:fixed;display:none;z-index:200;background:var(--s2);border:1px solid var(--ac);
+    padding:11px 13px;max-width:278px;box-shadow:var(--glow);pointer-events:none}
+  .tc{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ac);margin-bottom:2px}
+  .tt{font-size:.8rem;font-weight:700;margin-bottom:5px;line-height:1.25}
+  .tdesc{font-size:.64rem;color:var(--mu);line-height:1.4;margin-bottom:6px}
+  .tm{display:flex;gap:4px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:.57rem}
+  .tg{padding:2px 5px;border:1px solid var(--bd);color:var(--mu)}
+  .tg.u{border-color:rgba(167,139,250,.4);color:#c4b5fd}.tg.d{border-color:rgba(56,189,248,.28);color:var(--ac)}
+  .tpreq{margin-top:5px;font-size:.59rem;color:var(--mu);font-family:'JetBrains Mono',monospace;border-top:1px solid var(--bd);padding-top:5px;line-height:1.6}
+  .tpreq strong{color:var(--tx)}
+
+  /* legend */
+  #legend{position:fixed;bottom:40px;left:12px;z-index:50;background:rgba(12,15,24,.97);
+    border:1px solid var(--bd);padding:10px 12px;display:none;max-height:50vh;overflow-y:auto;min-width:138px}
+  .ltitle{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--mu);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
+  .li{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:.65rem;color:var(--mu)}
+  .ld{width:9px;height:9px;flex-shrink:0}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">COURSE<span>GRAPH</span></div>
+  <div class="sep"></div>
+  <div class="ctrl" id="ctrl" style="display:none">
+    <input class="srch" id="search" placeholder="Search…" oninput="doSearch()">
+    <select id="dsel" onchange="doFilter()"><option value="">All Depts</option></select>
+    <div class="sep"></div>
+    <button class="btn w on" id="bspec" onclick="toggleFlag('spec')">Hide Special</button>
+    <button class="btn"      id="bext"  onclick="toggleFlag('ext')">Hide External</button>
+    <div class="sep"></div>
+    <button class="btn on" onclick="cy&&cy.animate({fit:{padding:50},duration:300})">Fit</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+    <button class="btn" onclick="reloadUI()">Load New</button>
+  </div>
+  <div class="chips" id="chips" style="display:none">
+    <div class="chip"><strong id="sn">0</strong> courses</div>
+    <div class="chip"><strong id="se">0</strong> edges</div>
+    <div class="chip"><strong id="sl">0</strong> layers</div>
+    <div class="chip"><strong id="sp">0</strong> isolated</div>
+  </div>
+</header>
+
+<div id="wrap">
+  <div id="drop">
+    <div class="dbox" id="dbox" onclick="document.getElementById('finput').click()"
+         ondragover="event.preventDefault();this.classList.add('over')"
+         ondragleave="this.classList.remove('over')"
+         ondrop="onDrop(event)">
+      <div class="dico">⬡</div>
+      <div class="dtitle">Drop course JSON here</div>
+      <div class="dsub">prereqs.required = AND-of-OR groups</div>
+      <button class="btn on" onclick="event.stopPropagation();document.getElementById('finput').click()">Browse File</button>
+    </div>
+    <div class="ordiv">— OR —</div>
+    <button class="btn" onclick="loadDemo()">Load Demo</button>
+    <input type="file" id="finput" accept=".json" onchange="onFile(this)">
+  </div>
+  <div id="loading">
+    <div class="lrow"><div class="spin"></div><span id="lmsg">BUILDING…</span></div>
+    <div id="lsub"></div>
+  </div>
+  <div id="err"></div>
+  <div id="main-cy"></div>
+  <div id="pk-wrap" style="height:0px">
+    <div id="pk-hdr" onclick="togglePK()">
+      <span class="ph-label">Isolated Chains &amp; Standalone Courses</span>
+      <span class="ph-n" id="pk-n"></span>
+      <span class="ph-tog" id="pk-tog">▲</span>
+    </div>
+    <div id="pk-cy"></div>
+  </div>
+</div>
+
+<div id="tip">
+  <div class="tc" id="tc"></div><div class="tt" id="tt"></div>
+  <div class="tdesc" id="tdesc"></div>
+  <div class="tm">
+    <span class="tg u" id="tu"></span>
+    <span class="tg d" id="td"></span>
+    <span class="tg"   id="tdt"></span>
+  </div>
+  <div class="tpreq" id="tpreq"></div>
+</div>
+
+<div id="legend">
+  <div class="ltitle">Departments</div>
+  <div id="ldepts"></div>
+  <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)">
+    <div class="li"><div style="width:20px;height:2px;background:rgba(56,189,248,.7)"></div><span>Required (primary)</span></div>
+    <div class="li"><div style="width:20px;height:1px;border-top:1px dotted rgba(148,163,184,.26)"></div><span>Required (OR alt)</span></div>
+    <div class="li"><div style="width:20px;height:0;border-top:2px dashed rgba(251,146,60,.7)"></div><span>Concurrent</span></div>
+    <div class="li" style="font-size:.55rem;color:var(--mu);margin-top:2px;margin-bottom:5px;font-family:'JetBrains Mono',monospace">↳ wired routing</div>
+    <div class="li" style="margin-top:3px"><div class="ld" style="border:1.5px dashed rgba(251,191,36,.5)"></div><span>Special topics</span></div>
+    <div class="li"><div class="ld" style="border:1.5px dashed rgba(100,116,139,.36)"></div><span>External dept</span></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script>
+'use strict';
+// ─── State ────────────────────────────────────────────────────────────────────
+let cy = null, cyPK = null, rawData = null;
+let hideSpecial = true, hideExternal = false;
+
+// ─── Colors ───────────────────────────────────────────────────────────────────
+const PAL=['#38bdf8','#fb923c','#a78bfa','#34d399','#fbbf24','#f472b6',
+           '#60a5fa','#a3e635','#f97316','#22d3ee','#818cf8','#f87171',
+           '#2dd4bf','#e879f9','#4ade80','#facc15','#fb7185','#67e8f9'];
+let dmap={};
+const dc=d=>{ if(!dmap[d]) dmap[d]=PAL[Object.keys(dmap).length%PAL.length]; return dmap[d]; };
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+const courseNum=c=>{ const m=(c||'').match(/(\d+)/); return m?parseInt(m[1]):500; };
+const isSpecial=c=>{ const n=courseNum(c); return (n>=90&&n<=99)||(n>=190&&n<=199); };
+const phId=c=>'__x__'+c;
+const isPh=id=>typeof id==='string'&&id.startsWith('__x__');
+
+// ─── I/O ──────────────────────────────────────────────────────────────────────
+function onDrop(e){ e.preventDefault(); document.getElementById('dbox').classList.remove('over'); if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); }
+function onFile(i){ if(i.files[0]) readFile(i.files[0]); }
+function readFile(f){ const r=new FileReader(); r.onload=e=>{try{buildGraph(JSON.parse(e.target.result));}catch(ex){showErr('Invalid JSON: '+ex.message);}}; r.readAsText(f); }
+function reloadUI(){ document.getElementById('drop').style.display='flex'; ['ctrl','chips','legend'].forEach(id=>document.getElementById(id).style.display='none'); setPK(false,0); }
+function showLoad(m,s=''){document.getElementById('lmsg').textContent=m;document.getElementById('lsub').textContent=s;document.getElementById('loading').style.display='flex';}
+function hideLoad(){document.getElementById('loading').style.display='none';}
+function showErr(m){const b=document.getElementById('err');b.textContent='⚠ '+m;b.style.display='block';setTimeout(()=>b.style.display='none',6000);hideLoad();}
+
+// ─── Demo data ────────────────────────────────────────────────────────────────
+function loadDemo(){ buildGraph({courses:[
+  {id:'MATH 2A',code:'MATH 2A',title:'Calculus I',department:'MATH',units:4,description:'Limits, derivatives, and single-variable differential calculus.',prereqs:{required:[],concurrent:[]}},
+  {id:'MATH 2B',code:'MATH 2B',title:'Calculus II',department:'MATH',units:4,description:'Integration techniques, sequences and series.',prereqs:{required:[['MATH 2A']],concurrent:[]}},
+  {id:'MATH 4A',code:'MATH 4A',title:'Linear Algebra',department:'MATH',units:4,description:'Systems of equations, matrices, determinants, eigenvalues.',prereqs:{required:[['MATH 2A']],concurrent:[]}},
+  {id:'MATH 4B',code:'MATH 4B',title:'Differential Equations',department:'MATH',units:4,description:'First and higher-order ODEs.',prereqs:{required:[['MATH 4A']],concurrent:[]}},
+  {id:'MATH 8',code:'MATH 8',title:'Transitions to Higher Math',department:'MATH',units:4,description:'Logic, proof writing, sets, functions.',prereqs:{required:[['MATH 2B']],concurrent:[]}},
+  {id:'MATH 108A',code:'MATH 108A',title:'Abstract Algebra I',department:'MATH',units:4,description:'Groups, subgroups, homomorphisms.',prereqs:{required:[['MATH 8']],concurrent:[]}},
+  {id:'MATH 108B',code:'MATH 108B',title:'Abstract Algebra II',department:'MATH',units:4,description:'Rings, fields, Galois theory.',prereqs:{required:[['MATH 108A']],concurrent:[]}},
+  {id:'MATH 117',code:'MATH 117',title:'Methods of Analysis',department:'MATH',units:4,description:'Real analysis: sequences, continuity.',prereqs:{required:[['MATH 8']],concurrent:[]}},
+  {id:'MATH 197B',code:'MATH 197B',title:'Math Colloquium',department:'MATH',units:1,description:'Senior seminar and research colloquium.',prereqs:{required:[['MATH 108A','MATH 117']],concurrent:[]}},
+  {id:'CMPSC 8',code:'CMPSC 8',title:'Intro to CS',department:'CMPSC',units:4,description:'Python programming and problem decomposition.',prereqs:{required:[],concurrent:[]}},
+  {id:'CMPSC 9',code:'CMPSC 9',title:'Intermediate Python',department:'CMPSC',units:4,description:'OOP, recursion, data structures.',prereqs:{required:[['CMPSC 8']],concurrent:[]}},
+  {id:'CMPSC 16',code:'CMPSC 16',title:'Problem Solving I',department:'CMPSC',units:4,description:'C++ fundamentals.',prereqs:{required:[['CMPSC 8']],concurrent:[]}},
+  {id:'CMPSC 24',code:'CMPSC 24',title:'Problem Solving II',department:'CMPSC',units:4,description:'Linked lists, stacks, trees in C++.',prereqs:{required:[['CMPSC 16'],['MATH 2A']],concurrent:[]}},
+  {id:'CMPSC 32',code:'CMPSC 32',title:'OO Design',department:'CMPSC',units:4,description:'Design patterns, polymorphism.',prereqs:{required:[['CMPSC 24']],concurrent:[]}},
+  {id:'CMPSC 40',code:'CMPSC 40',title:'Foundations of CS',department:'CMPSC',units:4,description:'Logic, automata, computability.',prereqs:{required:[['CMPSC 16'],['MATH 2B']],concurrent:[]}},
+  {id:'CMPSC 64',code:'CMPSC 64',title:'Computer Organization',department:'CMPSC',units:4,description:'Digital logic, assembly, memory.',prereqs:{required:[['CMPSC 16']],concurrent:[]}},
+  {id:'CMPSC 130A',code:'CMPSC 130A',title:'Data Structures & Algorithms',department:'CMPSC',units:4,description:'Hash tables, heaps, balanced BSTs, graph traversal.',prereqs:{required:[['CMPSC 40','MATH 8'],['CMPSC 24','CMPSC 9']],concurrent:[['PSTAT 120A','ECE 139']]}},
+  {id:'CMPSC 130B',code:'CMPSC 130B',title:'Algorithm Design',department:'CMPSC',units:4,description:'NP-completeness, approximation, DP.',prereqs:{required:[['CMPSC 130A']],concurrent:[]}},
+  {id:'CMPSC 160',code:'CMPSC 160',title:'Compilers',department:'CMPSC',units:4,description:'Lexing, parsing, code generation.',prereqs:{required:[['CMPSC 130A'],['CMPSC 64']],concurrent:[]}},
+  {id:'CMPSC 170',code:'CMPSC 170',title:'Operating Systems',department:'CMPSC',units:4,description:'Processes, scheduling, memory, file systems.',prereqs:{required:[['CMPSC 130A'],['CMPSC 64']],concurrent:[]}},
+  {id:'CMPSC 171',code:'CMPSC 171',title:'Distributed Systems',department:'CMPSC',units:4,description:'Consensus, replication, fault tolerance.',prereqs:{required:[['CMPSC 170']],concurrent:[]}},
+  {id:'CMPSC 174A',code:'CMPSC 174A',title:'Networks',department:'CMPSC',units:4,description:'TCP/IP, routing, congestion control.',prereqs:{required:[['CMPSC 130A']],concurrent:[]}},
+  {id:'CMPSC 184',code:'CMPSC 184',title:'Mobile Dev',department:'CMPSC',units:4,description:'iOS/Android, UI patterns, REST.',prereqs:{required:[['CMPSC 130A']],concurrent:[]}},
+  {id:'ECE 10A',code:'ECE 10A',title:'Circuits I',department:'ECE',units:4,description:'KVL/KCL, resistors, capacitors.',prereqs:{required:[['MATH 4A'],['PHYS 4B']],concurrent:[]}},
+  {id:'ECE 139',code:'ECE 139',title:'Probability for Engineers',department:'ECE',units:4,description:'Random variables, distributions.',prereqs:{required:[['MATH 4A'],['MATH 2B']],concurrent:[]}},
+  {id:'ECE 130A',code:'ECE 130A',title:'Device Electronics I',department:'ECE',units:4,description:'Semiconductor physics, diodes.',prereqs:{required:[['ECE 10A'],['MATH 4B']],concurrent:[]}},
+  {id:'ECE 181',code:'ECE 181',title:'Computer Vision I',department:'ECE',units:4,description:'Image processing, feature detection.',prereqs:{required:[['ECE 139'],['MATH 4A']],concurrent:[]}},
+  {id:'ECE 182',code:'ECE 182',title:'Computer Vision II',department:'ECE',units:4,description:'Deep learning for vision, CNNs.',prereqs:{required:[['ECE 181']],concurrent:[]}},
+  {id:'PSTAT 120A',code:'PSTAT 120A',title:'Probability & Statistics',department:'PSTAT',units:4,description:'Probability theory, distributions, inference.',prereqs:{required:[['MATH 2B']],concurrent:[]}},
+  {id:'PSTAT 126',code:'PSTAT 126',title:'Regression Analysis',department:'PSTAT',units:4,description:'Linear regression, model diagnostics.',prereqs:{required:[['PSTAT 120A']],concurrent:[]}},
+  // Isolated chain
+  {id:'ECE 150',code:'ECE 150',title:'Engineering Ethics',department:'ECE',units:2,description:'Professional ethics, societal impact.',prereqs:{required:[],concurrent:[]}},
+  {id:'ECE 151',code:'ECE 151',title:'Engineering Law',department:'ECE',units:2,description:'IP, contracts, liability.',prereqs:{required:[['ECE 150']],concurrent:[]}},
+  // Standalone
+  {id:'CMPSC 1',code:'CMPSC 1',title:'CS Seminar',department:'CMPSC',units:1,description:'Overview of the CS field.',prereqs:{required:[],concurrent:[]}},
+]}); }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ENTRY POINT
+// ═══════════════════════════════════════════════════════════════════════════════
+function buildGraph(data){
+  rawData=data; dmap={};
+  document.getElementById('drop').style.display='none';
+  showLoad('ANALYSING…','computing layers & components');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    try{_build();}catch(ex){showErr('Build failed: '+ex.message);console.error(ex);}
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// _BUILD  — full graph construction
+// ═══════════════════════════════════════════════════════════════════════════════
+function _build(){
+  let courses = rawData.courses||[];
+  if(!courses.length){showErr('No courses found.');return;}
+  if(hideSpecial) courses=courses.filter(c=>!isSpecial(c.code||c.id));
+
+  const knownIds=new Set(courses.map(c=>c.id));
+
+  // ── Phantom nodes ────────────────────────────────────────────
+  const phantoms={};
+  if(!hideExternal){
+    courses.forEach(c=>{
+      [...(c.prereqs?.required||[]),...(c.prereqs?.concurrent||[])].flat().forEach(pid=>{
+        if(!knownIds.has(pid)&&!phantoms[pid])
+          phantoms[pid]={id:phId(pid),code:pid,dept:pid.split(' ')[0],
+            title:'External prereq',units:0,desc:'Referenced but not in this catalog.',
+            special:false,external:true,rawPrereqs:{required:[],concurrent:[]}};
+      });
+    });
+  }
+
+  // ── All nodes ────────────────────────────────────────────────
+  const allNodes=[
+    ...courses.map(c=>({id:c.id,code:c.code||c.id,dept:c.department||'?',
+      title:c.title||'',units:c.units||0,desc:c.description||'',
+      special:isSpecial(c.code||c.id),external:false,rawPrereqs:c.prereqs})),
+    ...Object.values(phantoms),
+  ];
+  const nodeSet=new Set(allNodes.map(n=>n.id));
+  const nodeMap=Object.fromEntries(allNodes.map(n=>[n.id,n]));
+  const rid=pid=>{ if(nodeSet.has(pid))return pid; const p=phId(pid); return nodeSet.has(p)?p:null; };
+
+  // ── Edges ────────────────────────────────────────────────────
+  const edges=[],edgeSet=new Set();
+  courses.forEach(c=>{
+    (c.prereqs?.required||[]).forEach((g,gi)=>g.forEach((pid,pi)=>{
+      const src=rid(pid); if(!src) return;
+      const eid=`r:${src}=>${c.id}:${gi}`; if(edgeSet.has(eid)) return; edgeSet.add(eid);
+      edges.push({id:eid,source:src,target:c.id,etype:'required',orPrimary:pi===0});
+    }));
+    (c.prereqs?.concurrent||[]).forEach((g,gi)=>g.forEach((pid,pi)=>{
+      const src=rid(pid); if(!src) return;
+      const eid=`c:${src}=>${c.id}:${gi}`; if(edgeSet.has(eid)) return; edgeSet.add(eid);
+      edges.push({id:eid,source:src,target:c.id,etype:'concurrent',orPrimary:pi===0});
+    }));
+  });
+
+  // ── Topology (required edges only) ───────────────────────────
+  const ch={},pa={};
+  allNodes.forEach(n=>{ch[n.id]=[];pa[n.id]=[];});
+  edges.filter(e=>e.etype==='required').forEach(e=>{
+    if(ch[e.source]!==undefined&&pa[e.target]!==undefined){
+      ch[e.source].push(e.target); pa[e.target].push(e.source);
+    }
+  });
+
+  // ── Kahn's topo sort → longest-path depth ────────────────────
+  const depth={}, indeg={};
+  allNodes.forEach(n=>{depth[n.id]=0; indeg[n.id]=new Set(pa[n.id]).size;});
+  const topoQ=allNodes.filter(n=>indeg[n.id]===0).map(n=>n.id);
+  const topo=[], inQ=new Set(topoQ);
+  let qi=0;
+  while(qi<topoQ.length){
+    const cur=topoQ[qi++]; topo.push(cur);
+    ch[cur].forEach(nxt=>{
+      depth[nxt]=Math.max(depth[nxt],depth[cur]+1);
+      if(--indeg[nxt]===0&&!inQ.has(nxt)){inQ.add(nxt);topoQ.push(nxt);}
+    });
+  }
+  // Remaining (cycle nodes) get max depth of known parents + 1
+  allNodes.forEach(n=>{
+    if(depth[n.id]===undefined) depth[n.id]=Math.max(0,...pa[n.id].map(p=>depth[p]||0))+1;
+  });
+
+  // ── Descendant count ─────────────────────────────────────────
+  const desc={};
+  topo.slice().reverse().forEach(id=>{desc[id]=(ch[id]||[]).reduce((s,childId)=>s+1+(desc[childId]||0),0);});
+
+  // ── Connected components (undirected required graph) ──────────
+  const uAdj={};
+  allNodes.forEach(n=>{uAdj[n.id]=[];});
+  edges.filter(e=>e.etype==='required').forEach(e=>{
+    if(uAdj[e.source]&&uAdj[e.target]){ uAdj[e.source].push(e.target); uAdj[e.target].push(e.source); }
+  });
+  const compOf={};
+  const comps=[];
+  const seen=new Set();
+  allNodes.forEach(n=>{
+    if(seen.has(n.id)) return;
+    const comp=[]; const q=[n.id];
+    while(q.length){ const cur2=q.pop(); if(seen.has(cur2)) continue; seen.add(cur2); comp.push(cur2); (uAdj[cur2]||[]).forEach(nb=>q.push(nb)); }
+    comps.push(comp); comp.forEach(id=>compOf[id]=comps.length-1);
+  });
+  if(!comps.length){showErr('No valid courses to display.');return;}
+  const mainIdx=comps.reduce((mi,comp,i)=>comp.length>(comps[mi]||[]).length?i:mi,0);
+  const mainSet=new Set(comps[mainIdx]||[]);
+  const mainNodes=allNodes.filter(n=>mainSet.has(n.id));
+  const parkNodes=allNodes.filter(n=>!mainSet.has(n.id));
+
+  // ── Departments ───────────────────────────────────────────────
+  const depts=[...new Set(allNodes.map(n=>n.dept))].sort();
+  depts.forEach(dc);
+
+  const sel=document.getElementById('dsel');
+  const prev=sel.value;
+  sel.innerHTML='<option value="">All Depts</option>';
+  depts.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
+  sel.value=depts.includes(prev)?prev:'';
+
+  document.getElementById('ldepts').innerHTML=depts.map(d=>
+    `<div class="li"><div class="ld" style="background:${dc(d)}"></div><span>${d}</span></div>`).join('');
+
+  const numLayers=mainNodes.length ? 1+Math.max(0,...mainNodes.map(n=>depth[n.id]||0)) : 1;
+  document.getElementById('sn').textContent=courses.length+(Object.keys(phantoms).length?' +'+Object.keys(phantoms).length:'');
+  document.getElementById('se').textContent=edges.length;
+  document.getElementById('sl').textContent=numLayers;
+  document.getElementById('sp').textContent=parkNodes.length;
+
+  // ── Shared style ─────────────────────────────────────────────
+  const deptStyles=depts.map(d=>({selector:`node[dept="${d}"]`,style:{'background-color':dc(d)}}));
+  const baseStyle=[
+    {selector:'node',style:{
+      'label':'data(label)',
+      'font-family':'JetBrains Mono, monospace',
+      'font-size':'8px',
+      'color':'#07090f',
+      'text-valign':'center','text-halign':'center',
+      'shape':'round-rectangle',
+      'padding':'6px',
+      'background-color':'#334155',
+      'border-width':0,
+    }},
+    ...deptStyles,
+    {selector:'node[external="yes"]',style:{'background-color':'transparent','border-width':1.5,'border-style':'dashed','border-color':'rgba(100,116,139,.36)','color':'rgba(100,116,139,.52)','font-size':'7.5px'}},
+    {selector:'node[special="yes"]',style:{'border-width':1.5,'border-style':'dashed','border-color':'rgba(251,191,36,.5)'}},
+    {selector:'node.hi',style:{'border-width':2.5,'border-color':'#fff','border-style':'solid','z-index':10,'opacity':1}},
+    {selector:'node.fa',style:{'opacity':.08}},
+    {selector:'edge',style:{
+      'width':1.1,'curve-style':'bezier',
+      'target-arrow-shape':'triangle','arrow-scale':.66,
+      'line-color':'rgba(56,189,248,.32)','target-arrow-color':'rgba(56,189,248,.32)',
+    }},
+    {selector:'edge[etype="required"][orPrimary="yes"]',style:{'line-color':'rgba(56,189,248,.68)','target-arrow-color':'rgba(56,189,248,.68)','width':1.5}},
+    {selector:'edge[etype="required"][orPrimary="no"]',style:{'line-style':'dotted','line-color':'rgba(148,163,184,.18)','target-arrow-color':'rgba(148,163,184,.18)','width':.8}},
+    {selector:'edge[etype="concurrent"][orPrimary="yes"]',style:{'line-style':'dashed','line-dash-pattern':[4,3],'line-color':'rgba(251,146,60,.68)','target-arrow-color':'rgba(251,146,60,.68)'}},
+    {selector:'edge[etype="concurrent"][orPrimary="no"]',style:{'line-style':'dotted','line-color':'rgba(251,146,60,.2)','target-arrow-color':'rgba(251,146,60,.2)','width':.8}},
+    {selector:'edge.hi',style:{'width':2,'z-index':5,'opacity':1}},
+    {selector:'edge[etype="required"].hi',style:{'line-color':'rgba(56,189,248,.95)','target-arrow-color':'rgba(56,189,248,.95)','line-style':'solid'}},
+    {selector:'edge[etype="concurrent"].hi',style:{'line-color':'rgba(251,146,60,.95)','target-arrow-color':'rgba(251,146,60,.95)'}},
+    {selector:'edge.fa',style:{'opacity':.03}},
+  ];
+
+  // ══════════════════════════════════════════════════════════════
+  // INITIAL POSITIONS — layer Y, dept-sorted X
+  // Strategy: pack dept groups tightly within each layer,
+  // with the widest layers determining the x-spread.
+  // This prevents the spiral artifact by giving every node
+  // a sensible starting position before force runs.
+  // ══════════════════════════════════════════════════════════════
+  const LAYER_H = 160;
+  const NODE_W  = 90;
+  const H_PAD   = 22;
+
+  // Group nodes by layer, sort within layer by dept then courseNum
+  const byLayer={};
+  mainNodes.forEach(n=>{
+    const L=depth[n.id];
+    if(!byLayer[L]) byLayer[L]=[];
+    byLayer[L].push(n);
+  });
+  Object.values(byLayer).forEach(g=>{
+    g.sort((a,b)=>a.dept.localeCompare(b.dept)||courseNum(a.code)-courseNum(b.code));
+  });
+
+  // Compute dept → average layer (for assigning dept a horizontal "home" column)
+  const deptAvgLayer={};
+  mainNodes.forEach(n=>{
+    if(!deptAvgLayer[n.dept]) deptAvgLayer[n.dept]={sum:0,cnt:0};
+    deptAvgLayer[n.dept].sum+=depth[n.id]; deptAvgLayer[n.dept].cnt++;
+  });
+  // Sort depts by avg layer ascending (foundational depts get left columns)
+  const sortedDepts=depts.filter(d=>mainNodes.some(n=>n.dept===d))
+    .sort((a,b)=>(deptAvgLayer[a]?.sum/deptAvgLayer[a]?.cnt||0)-(deptAvgLayer[b]?.sum/deptAvgLayer[b]?.cnt||0));
+  const deptOrder=Object.fromEntries(sortedDepts.map((d,i)=>[d,i]));
+  const numDepts=sortedDepts.length||1;
+  const DEPT_W=Math.max(240, (NODE_W+H_PAD)*10); // wider initial lane spread
+
+  // Assign initial X based on dept lane + position within layer-dept group
+  const initPos={};
+  Object.entries(byLayer).forEach(([L,layerNodes])=>{
+    // Group by dept within this layer
+    const deptGroups={};
+    layerNodes.forEach(n=>{
+      if(!deptGroups[n.dept]) deptGroups[n.dept]=[];
+      deptGroups[n.dept].push(n);
+    });
+    Object.entries(deptGroups).forEach(([dept,grp])=>{
+      const laneX=(deptOrder[dept]||0)*DEPT_W - (numDepts-1)*DEPT_W/2;
+      grp.forEach((n,i)=>{
+        const offset=(i-(grp.length-1)/2)*(NODE_W+H_PAD);
+        initPos[n.id]={x:laneX+offset, y:parseInt(L)*LAYER_H};
+      });
+    });
+  });
+
+  // ── Destroy old cy ───────────────────────────────────────────
+  if(cy){try{cy.destroy();}catch(e){}cy=null;}
+
+  if(!mainNodes.length){
+    showErr('No connected courses found after filtering.');
+    _buildParking(parkNodes, edges, baseStyle, deptStyles);
+    hideLoad();
+    document.getElementById('ctrl').style.display='flex';
+    document.getElementById('chips').style.display='flex';
+    document.getElementById('legend').style.display='block';
+    return;
+  }
+
+  const mainEdgeSet=new Set(mainNodes.map(n=>n.id));
+  const mainEdges=edges.filter(e=>mainEdgeSet.has(e.source)&&mainEdgeSet.has(e.target));
+
+  cy=cytoscape({
+    container:document.getElementById('main-cy'),
+    elements:[
+      ...mainNodes.map(n=>({data:{
+        id:n.id,label:n.code,title:n.title,dept:n.dept,
+        units:n.units,desc:n.desc,
+        layer:depth[n.id], descCount:desc[n.id]||0,
+        special:n.special?'yes':'no', external:n.external?'yes':'no',
+        rawPrereqs:n.rawPrereqs,
+      }, position:initPos[n.id]||{x:0,y:0}})),
+      ...mainEdges.map(e=>({data:{
+        id:e.id,source:e.source,target:e.target,
+        etype:e.etype,orPrimary:e.orPrimary?'yes':'no',
+      }})),
+    ],
+    style:baseStyle,
+    layout:{name:'preset'},
+    wheelSensitivity:.25,minZoom:.03,maxZoom:6,
+    textureOnViewport:mainNodes.length>200,
+    hideEdgesOnViewport:mainNodes.length>300,
+    motionBlur:false,
+  });
+
+  showLoad('RELAXING LAYOUT…','minimising edge crossings');
+
+  // ── Run force relaxation then finish ─────────────────────────
+  runForce({
+    cyInst:cy, nodes:mainNodes, nodeMap,
+    depth, LAYER_H, edges:mainEdges,
+    onDone:()=>{
+      cy.fit(cy.elements(),50);
+      _attachEvents(cy, true);
+
+      // Build parking lot
+      _buildParking(parkNodes, edges, baseStyle, deptStyles);
+
+      hideLoad();
+      document.getElementById('ctrl').style.display='flex';
+      document.getElementById('chips').style.display='flex';
+      document.getElementById('legend').style.display='block';
+      if(sel.value) doFilter();
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FORCE RELAXATION
+// Y is softly clamped to layer. X is free but:
+//   - Same-layer nodes repel strongly (elliptical, more horizontal)
+//   - Cross-layer nodes repel less
+//   - Edge springs attract connected nodes toward same X
+//   - Dept cohesion: soft pull toward dept's average X
+// ═══════════════════════════════════════════════════════════════════════════════
+function runForce({cyInst, nodes, nodeMap, depth, LAYER_H, edges, onDone}){
+  const N=nodes.length;
+  if(N===0){onDone();return;}
+
+  // Physics constants
+  const ITERS   = 350;
+  const DT      = 0.88;
+  const DAMP    = 0.76;
+  const K_Y     = 0.20;
+  const K_YMAX  = 55;
+  const K_REP   = 14000;  // increased to spread dense layers
+  const K_EX    = 0.016;  // edge X spring
+  const K_EY    = 0.07;   // edge cross-layer Y nudge
+  const K_DEPT  = 0.010;  // dept cohesion
+
+  const ids=nodes.map(n=>n.id);
+
+  // Pull dept average X from initial positions
+  const deptSumX={}, deptCnt={};
+  nodes.forEach(n=>{
+    const p=cyInst.getElementById(n.id).position();
+    if(!deptSumX[n.dept]){deptSumX[n.dept]=0;deptCnt[n.dept]=0;}
+    deptSumX[n.dept]+=p.x; deptCnt[n.dept]++;
+  });
+  const deptAvgX={};
+  Object.keys(deptSumX).forEach(d=>deptAvgX[d]=deptSumX[d]/deptCnt[d]);
+
+  // State arrays for speed
+  const px=new Float64Array(N), py=new Float64Array(N);
+  const vx=new Float64Array(N), vy=new Float64Array(N);
+  const idxOf={};
+  nodes.forEach((n,i)=>{
+    idxOf[n.id]=i;
+    const p=cyInst.getElementById(n.id).position();
+    px[i]=p.x; py[i]=p.y;
+  });
+
+  // Edge list as index pairs (primary only to avoid chaos)
+  const ePairs=[];
+  edges.filter(e=>e.orPrimary==='yes'||e.orPrimary===true).forEach(e=>{
+    const si=idxOf[e.source], ti=idxOf[e.target];
+    if(si!==undefined&&ti!==undefined) ePairs.push([si,ti,e.etype]);
+  });
+
+  // Node half-widths: estimate from label length (avg 7.5px/char + 12px padding each side)
+  const halfW=nodes.map(n=>Math.max(40, (n.code||n.id).length*4.2+14));
+  const halfH=14; // fixed half-height
+
+  // Post-force overlap resolution: runs after simulation converges
+  function resolveOverlaps(){
+    const PASSES=60, MARGIN=4;
+    for(let pass=0;pass<PASSES;pass++){
+      let moved=false;
+      for(let i=0;i<N;i++){
+        for(let j=i+1;j<N;j++){
+          const dx=px[i]-px[j], dy=py[i]-py[j];
+          const minX=halfW[i]+halfW[j]+MARGIN;
+          const minY=halfH*2+MARGIN;
+          const overlapX=minX-Math.abs(dx), overlapY=minY-Math.abs(dy);
+          if(overlapX>0&&overlapY>0){
+            // Resolve along the axis with less overlap needed
+            if(overlapX<=overlapY){
+              // Push apart horizontally
+              const push=(overlapX/2+1)*Math.sign(dx||1);
+              px[i]+=push; px[j]-=push;
+            } else {
+              // Push apart vertically — but only if different layers
+              if(depth[nodes[i].id]!==depth[nodes[j].id]){
+                const push=(overlapY/2+1)*Math.sign(dy||1);
+                py[i]+=push; py[j]-=push;
+              } else {
+                // Same layer: force horizontal only
+                const push=(overlapX/2+1)*Math.sign(dx||1);
+                px[i]+=push; px[j]-=push;
+              }
+            }
+            moved=true;
+          }
+        }
+      }
+      if(!moved) break;
+    }
+  }
+
+  let iter=0;
+  function step(){
+    if(iter>=ITERS){
+      resolveOverlaps();
+      nodes.forEach((n,i)=>cyInst.getElementById(n.id).position({x:px[i],y:py[i]}));
+      onDone(); return;
+    }
+    const alpha=1-iter/ITERS; // cooling: 1→0
+    iter++;
+
+    const fx=new Float64Array(N), fy=new Float64Array(N);
+
+    // ── Layer Y spring ──────────────────────────────────────
+    for(let i=0;i<N;i++){
+      const ty=(depth[nodes[i].id]||0)*LAYER_H;
+      fy[i]+=(ty-py[i])*K_Y*(1+alpha*2);
+    }
+
+    // ── Node-node repulsion (O(N²)) ─────────────────────────
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx=px[i]-px[j], dy=py[i]-py[j];
+        const d2=dx*dx+dy*dy+0.1;
+        const dist=Math.sqrt(d2);
+        const sameL=depth[nodes[i].id]===depth[nodes[j].id];
+        // Stronger horizontal repulsion in same layer
+        const rx=sameL?180:110, ry=sameL?60:90;
+        const nd=Math.sqrt((dx/rx)**2+(dy/ry)**2)||0.001;
+        if(nd<2.2){
+          const mag=K_REP*alpha/(d2+50);
+          fx[i]+=dx/dist*mag; fy[i]+=dy/dist*mag*(sameL?0.12:0.25);
+          fx[j]-=dx/dist*mag; fy[j]-=dy/dist*mag*(sameL?0.12:0.25);
+        }
+      }
+    }
+
+    // ── Edge springs ────────────────────────────────────────
+    for(const [si,ti,etype] of ePairs){
+      const dx=px[ti]-px[si], dy=py[ti]-py[si];
+      // X: attract toward same column
+      fx[si]+=dx*K_EX*alpha;
+      fx[ti]-=dx*K_EX*alpha;
+      // Y: nudge so source is strictly above target
+      const dL=(depth[nodes[ti].id]||0)-(depth[nodes[si].id]||0);
+      if(dL>0){
+        const idealDy=dL*LAYER_H;
+        const err=dy-idealDy;
+        fy[si]+=err*K_EY*alpha;
+        fy[ti]-=err*K_EY*alpha;
+      }
+    }
+
+    // ── Dept cohesion ────────────────────────────────────────
+    for(let i=0;i<N;i++){
+      const cx=deptAvgX[nodes[i].dept];
+      if(cx!==undefined) fx[i]+=(cx-px[i])*K_DEPT*alpha;
+    }
+
+    // ── Integrate + clamp Y ──────────────────────────────────
+    for(let i=0;i<N;i++){
+      vx[i]=(vx[i]+fx[i]*DT)*DAMP;
+      vy[i]=(vy[i]+fy[i]*DT)*DAMP;
+      px[i]+=vx[i]*DT;
+      py[i]+=vy[i]*DT;
+      // Soft Y clamp: exponential resistance beyond ±K_YMAX
+      const ty=(depth[nodes[i].id]||0)*LAYER_H;
+      const dy=py[i]-ty;
+      if(Math.abs(dy)>K_YMAX) py[i]=ty+Math.sign(dy)*(K_YMAX+(Math.abs(dy)-K_YMAX)*0.15);
+    }
+
+    // Live preview every 25 iters
+    if(iter%25===0){
+      nodes.forEach((n,i)=>cyInst.getElementById(n.id).position({x:px[i],y:py[i]}));
+    }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PARKING LOT
+// ═══════════════════════════════════════════════════════════════════════════════
+function _buildParking(parkNodes, allEdges, baseStyle, deptStyles){
+  const pw=document.getElementById('pk-wrap');
+  if(!parkNodes.length){setPK(false,0);return;}
+
+  const parkSet=new Set(parkNodes.map(n=>n.id));
+  const pkEdges=allEdges.filter(e=>parkSet.has(e.source)&&parkSet.has(e.target));
+
+  // Find connected components within parking nodes
+  const adj={};
+  parkNodes.forEach(n=>{adj[n.id]=[];});
+  pkEdges.forEach(e=>{if(adj[e.source]&&adj[e.target]){adj[e.source].push(e.target);adj[e.target].push(e.source);}});
+  const seen2=new Set(), pComps=[];
+  parkNodes.forEach(n=>{
+    if(seen2.has(n.id)) return;
+    const comp=[]; const q=[n.id];
+    while(q.length){const c=q.pop();if(seen2.has(c))continue;seen2.add(c);comp.push(c);adj[c].forEach(nb=>q.push(nb));}
+    pComps.push(comp);
+  });
+  pComps.sort((a,b)=>b.length-a.length);
+
+  // Layout each comp as a tiny DAG left-to-right
+  const CW=110, CH=55, GAP=20;
+  const pos={};
+  let curX=GAP;
+  pComps.forEach(comp=>{
+    // Topo depth within comp
+    const cd={};comp.forEach(id=>{cd[id]=0;});
+    const ca={};comp.forEach(id=>{ca[id]=[];});
+    pkEdges.filter(e=>comp.includes(e.source)&&comp.includes(e.target)).forEach(e=>ca[e.source].push(e.target));
+    const roots=comp.filter(id=>!pkEdges.some(e=>e.target===id&&comp.includes(e.source)));
+    const q2=[...roots]; const s3=new Set(roots);
+    while(q2.length){const c=q2.shift();ca[c].forEach(nxt=>{cd[nxt]=Math.max(cd[nxt],cd[c]+1);if(!s3.has(nxt)){s3.add(nxt);q2.push(nxt);}});}
+    const maxD=Math.max(0,...comp.map(id=>cd[id]));
+    const layers={};
+    comp.forEach(id=>{if(!layers[cd[id]])layers[cd[id]]=[];layers[cd[id]].push(id);});
+    const maxRow=Math.max(...Object.values(layers).map(r=>r.length));
+    const compW=Math.max(CW,maxRow*CW);
+    Object.entries(layers).forEach(([L,ids])=>{
+      ids.forEach((id,i)=>{pos[id]={x:curX+(i-(ids.length-1)/2)*CW+compW/2, y:parseInt(L)*CH+GAP};});
+    });
+    curX+=compW+GAP*2;
+  });
+
+  const pkH=Math.min(220, Math.max(88, Math.max(...parkNodes.map(n=>pos[n.id]?.y||0))+CH+GAP+28));
+
+  if(cyPK){try{cyPK.destroy();}catch(e){}cyPK=null;}
+  cyPK=cytoscape({
+    container:document.getElementById('pk-cy'),
+    elements:[
+      ...parkNodes.map(n=>({data:{
+        id:n.id,label:n.code,title:n.title,dept:n.dept,units:n.units,desc:n.desc,
+        special:n.special?'yes':'no',external:n.external?'yes':'no',rawPrereqs:n.rawPrereqs,
+        layer:0,descCount:0,
+      },position:pos[n.id]||{x:0,y:0}})),
+      ...pkEdges.map(e=>({data:{id:e.id,source:e.source,target:e.target,etype:e.etype,orPrimary:e.orPrimary?'yes':'no'}})),
+    ],
+    style:[...baseStyle,...deptStyles],
+    layout:{name:'preset'},
+    wheelSensitivity:.25,minZoom:.1,maxZoom:4,motionBlur:false,
+  });
+  cyPK.fit(cyPK.elements(),16);
+  _attachEvents(cyPK, false);
+
+  document.getElementById('pk-n').textContent=parkNodes.length+' nodes';
+  setPK(true, pkH);
+}
+
+function setPK(open,h){
+  const pw=document.getElementById('pk-wrap');
+  const tog=document.getElementById('pk-tog');
+  pw.style.height=(open?h:0)+'px';
+  if(tog) tog.textContent=open?'▼':'▲';
+}
+function togglePK(){
+  const pw=document.getElementById('pk-wrap');
+  const cur=parseInt(pw.style.height)||0;
+  if(cur>28){ pw.style.height='28px'; document.getElementById('pk-tog').textContent='▲'; }
+  else {
+    const pkH=cyPK?Math.min(220,88):0;
+    pw.style.height=pkH+'px'; document.getElementById('pk-tog').textContent='▼';
+    if(cyPK) setTimeout(()=>cyPK.resize(),260);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════════════════════════
+function showTip(e){
+  const d=e.target.data();
+  document.getElementById('tc').textContent=d.label;
+  document.getElementById('tt').textContent=d.title;
+  document.getElementById('tdesc').textContent=(d.desc||'').length>142?d.desc.slice(0,142)+'…':d.desc;
+  document.getElementById('tu').textContent=d.units+' unit'+(d.units!==1?'s':'');
+  document.getElementById('td').textContent=d.layer!==undefined
+    ?'layer '+(d.layer+1)+(d.descCount?' · '+d.descCount+' dep.':''):'isolated';
+  document.getElementById('tdt').textContent=d.external==='yes'?'external':'dept: '+d.dept;
+  const rp=d.rawPrereqs;
+  const lines=[];
+  if(rp){
+    (rp.required||[]).forEach((g,i)=>lines.push(`<strong>Req ${i+1}:</strong> ${g.join(' <em>or</em> ')}`));
+    (rp.concurrent||[]).forEach((g,i)=>lines.push(`<strong>Conc ${i+1}:</strong> ${g.join(' <em>or</em> ')}`));
+  }
+  document.getElementById('tpreq').innerHTML=lines.join('<br>')||'<em>no prerequisites</em>';
+  document.getElementById('tip').style.display='block';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════════════════════════════
+function _attachEvents(cyInst, isMain){
+  cyInst.on('mouseover','node',e=>showTip(e));
+  cyInst.on('mousemove','node',e=>{
+    document.getElementById('tip').style.left=(e.originalEvent.clientX+15)+'px';
+    document.getElementById('tip').style.top=(e.originalEvent.clientY-8)+'px';
+  });
+  cyInst.on('mouseout','node',()=>{document.getElementById('tip').style.display='none';});
+  if(isMain){
+    cyInst.on('tap','node',e=>{
+      document.getElementById('tip').style.display='none';
+      cyInst.elements().removeClass('hi fa');
+      const n=e.target;
+      const chain=n.union(n.predecessors()).union(n.successors());
+      cyInst.elements().not(chain).addClass('fa');
+      chain.addClass('hi');
+    });
+    cyInst.on('tap',e=>{
+      if(e.target===cyInst){
+        cyInst.elements().removeClass('hi fa');
+        const d=document.getElementById('dsel').value,q=document.getElementById('search').value.trim();
+        if(d||q)doFilter();
+      }
+    });
+  }
+  cyInst.on('dblclick','node',e=>{const url=e.target.data('url');if(url&&url!=='#')window.open(url,'_blank');});
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════════════════════════════════
+function toggleFlag(f){
+  if(f==='spec'){
+    hideSpecial=!hideSpecial;
+    const b=document.getElementById('bspec');
+    b.textContent=hideSpecial?'Hide Special':'Show Special';
+    b.classList.toggle('on',hideSpecial);
+  } else {
+    hideExternal=!hideExternal;
+    const b=document.getElementById('bext');
+    b.textContent=hideExternal?'Show External':'Hide External';
+    b.classList.toggle('on',hideExternal);
+  }
+  if(rawData){showLoad('REBUILDING…');requestAnimationFrame(()=>requestAnimationFrame(()=>{try{_build();}catch(e){showErr(e.message);}}));}
+}
+function doFilter(){
+  if(!cy)return;
+  cy.elements().removeClass('hi fa');
+  const dept=document.getElementById('dsel').value;
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  if(!dept&&!q)return;
+  let m=cy.nodes();
+  if(dept)m=m.filter(`[dept="${dept}"]`);
+  if(q)m=m.filter(n=>n.data('label').toLowerCase().includes(q)||n.data('title').toLowerCase().includes(q));
+  if(!m.length)return;
+  const keep=m.closedNeighborhood();
+  cy.elements().not(keep).addClass('fa');
+  keep.addClass('hi');
+}
+function doSearch(){doFilter();}
+function resetAll(){
+  if(!cy)return;
+  cy.elements().removeClass('hi fa');
+  document.getElementById('dsel').value='';
+  document.getElementById('search').value='';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Prerequisite Graph</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --border: #1e2330;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --glow: 0 0 20px rgba(0,229,255,0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,12,16,0.9);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    white-space: nowrap;
+  }
+  .logo span { color: var(--text-muted); font-weight: 400; }
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; flex: 1; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+  .btn.primary { border-color: var(--accent); color: var(--accent); }
+  .btn.primary:hover { background: rgba(0,229,255,0.1); }
+  select, #search {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:hover, select:focus, #search:focus { border-color: var(--accent); }
+  #search { width: 160px; cursor: text; }
+  #search::placeholder { color: var(--text-muted); }
+  .stat-chips { display: flex; gap: 8px; margin-left: auto; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+  .chip strong { color: var(--accent); }
+  #cy-container { flex: 1; position: relative; z-index: 1; }
+  #cy { width: 100%; height: 100%; }
+
+  #drop-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    gap: 20px;
+    background: var(--bg);
+  }
+  .drop-box {
+    border: 2px dashed var(--border);
+    padding: 60px 80px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .drop-box:hover, .drop-box.drag-over {
+    border-color: var(--accent);
+    box-shadow: var(--glow), inset 0 0 40px rgba(0,229,255,0.04);
+  }
+  .drop-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+  .drop-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+  .drop-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; }
+  #file-input { display: none; }
+  .or-divider { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.1em; }
+
+  #loading {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,12,16,0.85);
+    z-index: 50;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loading-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #error-banner {
+    display: none;
+    position: absolute;
+    top: 10px; left: 50%; transform: translateX(-50%);
+    z-index: 100;
+    background: #3b0a0a;
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 10px 20px;
+    max-width: 500px;
+    text-align: center;
+  }
+
+  #tooltip {
+    position: fixed;
+    display: none;
+    z-index: 100;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 14px 16px;
+    max-width: 300px;
+    box-shadow: var(--glow);
+    pointer-events: none;
+  }
+  .tt-code { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 4px; }
+  .tt-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+  .tt-desc { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
+  .tt-meta { display: flex; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; flex-wrap: wrap; }
+  .tt-tag { padding: 2px 7px; border: 1px solid var(--border); color: var(--text-muted); }
+  .tt-tag.units { border-color: rgba(124,58,237,0.5); color: #a78bfa; }
+
+  #legend {
+    position: fixed;
+    bottom: 20px; left: 20px;
+    z-index: 50;
+    background: rgba(17,19,24,0.95);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    backdrop-filter: blur(8px);
+    display: none;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .legend-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.75rem; color: var(--text-muted); }
+  .legend-dot { width: 12px; height: 12px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COURSE<span>GRAPH</span></div>
+  <div class="controls" id="controls" style="display:none">
+    <input type="text" id="search" placeholder="Search course..." oninput="searchCourse(this.value)">
+    <select id="dept-filter" onchange="filterByDept(this.value)">
+      <option value="">All Departments</option>
+    </select>
+    <select id="layout-select" onchange="changeLayout(this.value)">
+      <option value="breadthfirst">Breadth-First (Default)</option>
+      <option value="cose">Force-Directed</option>
+      <option value="grid">Grid</option>
+      <option value="circle">Circular</option>
+    </select>
+    <button class="btn primary" onclick="cy && cy.fit()">Fit View</button>
+    <button class="btn" onclick="resetHighlight()">Reset</button>
+    <button class="btn" onclick="reloadUI()">Load New</button>
+  </div>
+  <div class="stat-chips" id="stats" style="display:none">
+    <div class="chip"><strong id="stat-nodes">0</strong> courses</div>
+    <div class="chip"><strong id="stat-edges">0</strong> prereqs</div>
+    <div class="chip"><strong id="stat-depts">0</strong> depts</div>
+  </div>
+</header>
+
+<div id="cy-container">
+  <div id="drop-overlay">
+    <div class="drop-box" id="drop-box"
+         onclick="document.getElementById('file-input').click()"
+         ondragover="event.preventDefault(); this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="handleDrop(event)">
+      <div class="drop-icon">⬡</div>
+      <div class="drop-title">Drop your JSON file here</div>
+      <div class="drop-sub">Expects the university course schema format</div>
+      <button class="btn primary" onclick="event.stopPropagation(); document.getElementById('file-input').click()">Browse File</button>
+    </div>
+    <div class="or-divider">— OR LOAD DEMO DATA —</div>
+    <button class="btn" onclick="loadDemo()">Load Sample Graph</button>
+    <input type="file" id="file-input" accept=".json" onchange="loadFile(this)">
+  </div>
+
+  <div id="loading">
+    <div class="loading-text">
+      <div class="spinner"></div>
+      <span id="loading-msg">BUILDING GRAPH...</span>
+    </div>
+  </div>
+
+  <div id="error-banner"></div>
+  <div id="cy"></div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-code" id="tt-code"></div>
+  <div class="tt-title" id="tt-title"></div>
+  <div class="tt-desc" id="tt-desc"></div>
+  <div class="tt-meta">
+    <span class="tt-tag units" id="tt-units"></span>
+    <span class="tt-tag" id="tt-dept"></span>
+    <span class="tt-tag" id="tt-prereqs"></span>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="legend-title">Departments</div>
+  <div id="legend-depts"></div>
+  <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border)">
+    <div class="legend-item">
+      <div style="width:24px;height:2px;background:rgba(0,229,255,0.8);flex-shrink:0"></div>
+      <span>Required prereq</span>
+    </div>
+    <div class="legend-item">
+      <div style="width:24px;height:0;border-top:2px dashed rgba(255,107,53,0.8);flex-shrink:0"></div>
+      <span>Concurrent</span>
+    </div>
+  </div>
+</div>
+
+<!-- Cytoscape from unpkg — more reliable than cdnjs for this package -->
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+
+<script>
+let cy = null;
+
+const DEPT_COLORS = [
+  '#00e5ff','#ff6b35','#7c3aed','#10b981','#f59e0b',
+  '#ec4899','#3b82f6','#84cc16','#f97316','#06b6d4',
+  '#8b5cf6','#ef4444','#14b8a6','#a855f7','#22c55e'
+];
+let deptColorMap = {};
+
+function getDeptColor(dept) {
+  if (!deptColorMap[dept]) {
+    deptColorMap[dept] = DEPT_COLORS[Object.keys(deptColorMap).length % DEPT_COLORS.length];
+  }
+  return deptColorMap[dept];
+}
+
+// ── File I/O ──────────────────────────────────────────────────────────────────
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-box').classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+}
+function loadFile(input) {
+  if (input.files[0]) readFile(input.files[0]);
+}
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try { buildGraph(JSON.parse(e.target.result)); }
+    catch(err) { showError('Invalid JSON: ' + err.message); }
+  };
+  reader.readAsText(file);
+}
+function reloadUI() {
+  document.getElementById('drop-overlay').style.display = 'flex';
+  document.getElementById('controls').style.display = 'none';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('legend').style.display = 'none';
+}
+function showError(msg) {
+  const b = document.getElementById('error-banner');
+  b.textContent = '⚠ ' + msg;
+  b.style.display = 'block';
+  setTimeout(() => b.style.display = 'none', 6000);
+  hideLoading();
+}
+function showLoading(msg) {
+  document.getElementById('loading-msg').textContent = msg || 'BUILDING GRAPH...';
+  document.getElementById('loading').style.display = 'flex';
+}
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none';
+}
+
+// ── Demo data ─────────────────────────────────────────────────────────────────
+function loadDemo() {
+  buildGraph({ courses: [
+    { id:'MATH 3A', code:'MATH 3A', title:'Calculus I', department:'MATH', units:4, description:'Differential calculus, limits, derivatives, and applications.', prereqs:{required:[],concurrent:[]} },
+    { id:'MATH 3B', code:'MATH 3B', title:'Calculus II', department:'MATH', units:4, description:'Integral calculus, techniques of integration, and series.', prereqs:{required:[['MATH 3A']],concurrent:[]} },
+    { id:'MATH 4A', code:'MATH 4A', title:'Linear Algebra', department:'MATH', units:4, description:'Matrices, vector spaces, eigenvalues.', prereqs:{required:[['MATH 3A']],concurrent:[]} },
+    { id:'MATH 6A', code:'MATH 6A', title:'Differential Equations', department:'MATH', units:3, description:'Ordinary differential equations and their applications.', prereqs:{required:[['MATH 3B']],concurrent:[]} },
+    { id:'CMPSC 8', code:'CMPSC 8', title:'Intro to CS', department:'CMPSC', units:4, description:'Introduction to programming with Python.', prereqs:{required:[],concurrent:[]} },
+    { id:'CMPSC 16', code:'CMPSC 16', title:'Problem Solving I', department:'CMPSC', units:4, description:'Programming fundamentals in C++.', prereqs:{required:[['CMPSC 8']],concurrent:[]} },
+    { id:'CMPSC 24', code:'CMPSC 24', title:'Problem Solving II', department:'CMPSC', units:4, description:'Data structures and algorithms in C++.', prereqs:{required:[['CMPSC 16'],['MATH 3A']],concurrent:[]} },
+    { id:'CMPSC 32', code:'CMPSC 32', title:'Object Oriented Design', department:'CMPSC', units:4, description:'OOP design patterns and principles.', prereqs:{required:[['CMPSC 24']],concurrent:[]} },
+    { id:'CMPSC 40', code:'CMPSC 40', title:'Foundations of CS', department:'CMPSC', units:4, description:'Logic, automata, and computability theory.', prereqs:{required:[['CMPSC 16'],['MATH 3B']],concurrent:[]} },
+    { id:'CMPSC 64', code:'CMPSC 64', title:'Computer Organization', department:'CMPSC', units:4, description:'Computer architecture, assembly language.', prereqs:{required:[['CMPSC 16']],concurrent:[]} },
+    { id:'CMPSC 130A', code:'CMPSC 130A', title:'Algorithms I', department:'CMPSC', units:4, description:'Advanced data structures and algorithm analysis.', prereqs:{required:[['CMPSC 32'],['CMPSC 40']],concurrent:[]} },
+    { id:'CMPSC 130B', code:'CMPSC 130B', title:'Algorithms II', department:'CMPSC', units:4, description:'Graph algorithms, dynamic programming, NP-completeness.', prereqs:{required:[['CMPSC 130A']],concurrent:[]} },
+    { id:'CMPSC 160', code:'CMPSC 160', title:'Compilers', department:'CMPSC', units:4, description:'Translation of programming languages, compiler design.', prereqs:{required:[['CMPSC 130A'],['CMPSC 64']],concurrent:[]} },
+    { id:'ECE 1A', code:'ECE 1A', title:'Intro to EE', department:'ECE', units:2, description:'Overview of electrical engineering principles.', prereqs:{required:[],concurrent:[]} },
+    { id:'ECE 15', code:'ECE 15', title:'Engineering Computation', department:'ECE', units:4, description:'Programming for engineers in C/C++.', prereqs:{required:[['MATH 3A']],concurrent:[]} },
+    { id:'ECE 2', code:'ECE 2', title:'Signal Analysis', department:'ECE', units:4, description:'Signals, systems, Fourier transforms.', prereqs:{required:[['MATH 3B'],['ECE 1A']],concurrent:[]} },
+    { id:'ECE 130A', code:'ECE 130A', title:'Device Electronics I', department:'ECE', units:4, description:'Semiconductor device physics and circuits.', prereqs:{required:[['ECE 2'],['MATH 6A']],concurrent:['ECE 130B']} },
+    { id:'ECE 130B', code:'ECE 130B', title:'Device Electronics II', department:'ECE', units:4, description:'Advanced electronic circuit design.', prereqs:{required:[['ECE 2']],concurrent:[]} },
+  ]});
+}
+
+// ── Main graph builder ────────────────────────────────────────────────────────
+function buildGraph(data) {
+  deptColorMap = {};
+  document.getElementById('drop-overlay').style.display = 'none';
+  showLoading('BUILDING GRAPH...');
+
+  // Double rAF ensures the loading screen paints before we block the thread
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    try { _buildGraph(data); }
+    catch(err) {
+      showError('Graph build failed: ' + err.message);
+      console.error(err);
+    }
+  }));
+}
+
+function _buildGraph(data) {
+  const courses = data.courses || [];
+  if (!courses.length) { showError('No courses found in JSON.'); return; }
+
+  const courseIds = new Set(courses.map(c => c.id));
+  const elements = [];
+
+  // Nodes
+  courses.forEach(c => {
+    elements.push({ data: {
+      id: c.id,
+      label: c.code || c.id,
+      title: c.title || '',
+      dept: c.department || 'UNKNOWN',
+      units: c.units || 0,
+      description: c.description || '',
+    }});
+  });
+
+  // Edges — deduplicate by edge id
+  const edgeIds = new Set();
+  courses.forEach(c => {
+    (c.prereqs?.required || []).forEach((group, gi) => {
+      group.forEach((pid, pi) => {
+        if (!courseIds.has(pid)) return;
+        const eid = `req-${pid}->${c.id}`;
+        if (edgeIds.has(eid)) return;
+        edgeIds.add(eid);
+        elements.push({ data: { id: eid, source: pid, target: c.id, etype: 'required' }});
+      });
+    });
+    (c.prereqs?.concurrent || []).forEach((pid, i) => {
+      if (!courseIds.has(pid)) return;
+      const eid = `conc-${pid}->${c.id}`;
+      if (edgeIds.has(eid)) return;
+      edgeIds.add(eid);
+      elements.push({ data: { id: eid, source: pid, target: c.id, etype: 'concurrent' }});
+    });
+  });
+
+  const depts = [...new Set(courses.map(c => c.department || 'UNKNOWN'))].sort();
+  depts.forEach(d => getDeptColor(d));
+
+  // Populate dept filter
+  const sel = document.getElementById('dept-filter');
+  sel.innerHTML = '<option value="">All Departments</option>';
+  depts.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d; sel.appendChild(o); });
+
+  // Legend
+  document.getElementById('legend-depts').innerHTML = depts.map(d =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${getDeptColor(d)}"></div><span>${d}</span></div>`
+  ).join('');
+
+  // Stats
+  document.getElementById('stat-nodes').textContent = courses.length;
+  document.getElementById('stat-edges').textContent = edgeIds.size;
+  document.getElementById('stat-depts').textContent = depts.length;
+
+  if (cy) { try { cy.destroy(); } catch(e){} cy = null; }
+
+  // Dynamic dept color styles using attribute selector
+  const deptStyles = depts.map(d => ({
+    selector: `node[dept = "${d}"]`,
+    style: { 'background-color': getDeptColor(d) }
+  }));
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)',
+          'font-family': 'JetBrains Mono, monospace',
+          'font-size': '9px',
+          'font-weight': '600',
+          'color': '#0a0c10',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'width': 'label',
+          'height': 'label',
+          'padding': '8px',
+          'shape': 'round-rectangle',
+          'border-width': 0,
+          'background-color': '#475569',
+        }
+      },
+      ...deptStyles,
+      { selector: 'node.highlighted', style: { 'border-width': 2.5, 'border-color': '#ffffff', 'z-index': 10 } },
+      { selector: 'node.faded',       style: { 'opacity': 0.12 } },
+      {
+        selector: 'edge',
+        style: {
+          'width': 1.5,
+          'curve-style': 'bezier',
+          'target-arrow-shape': 'triangle',
+          'arrow-scale': 0.8,
+          'line-color': 'rgba(0,229,255,0.45)',
+          'target-arrow-color': 'rgba(0,229,255,0.45)',
+        }
+      },
+      {
+        selector: 'edge[etype = "concurrent"]',
+        style: {
+          'line-style': 'dashed',
+          'line-dash-pattern': [6, 3],
+          'line-color': 'rgba(255,107,53,0.55)',
+          'target-arrow-color': 'rgba(255,107,53,0.55)',
+        }
+      },
+      { selector: 'edge.highlighted', style: { 'width': 2.5, 'z-index': 5, 'opacity': 1 } },
+      { selector: 'edge[etype = "required"].highlighted',   style: { 'line-color': '#00e5ff', 'target-arrow-color': '#00e5ff' } },
+      { selector: 'edge[etype = "concurrent"].highlighted', style: { 'line-color': '#ff6b35', 'target-arrow-color': '#ff6b35' } },
+      { selector: 'edge.faded', style: { 'opacity': 0.05 } },
+    ],
+    layout: {
+      name: 'breadthfirst',   // Built-in — no external lib needed, handles DAGs well
+      directed: true,
+      padding: 50,
+      spacingFactor: 1.6,
+      avoidOverlap: true,
+      animate: false,         // Synchronous = no chance of hanging
+    },
+    // Performance hints for large graphs
+    textureOnViewport: courses.length > 150,
+    hideEdgesOnViewport: courses.length > 200,
+    motionBlur: false,
+    wheelSensitivity: 0.3,
+    minZoom: 0.05,
+    maxZoom: 4,
+  });
+
+  attachInteractions();
+
+  hideLoading();
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('stats').style.display = 'flex';
+  document.getElementById('legend').style.display = 'block';
+  document.getElementById('layout-select').value = 'breadthfirst';
+}
+
+// ── Interactions ──────────────────────────────────────────────────────────────
+function attachInteractions() {
+  const tooltip = document.getElementById('tooltip');
+
+  cy.on('mouseover', 'node', e => {
+    const d = e.target.data();
+    document.getElementById('tt-code').textContent = d.label;
+    document.getElementById('tt-title').textContent = d.title;
+    document.getElementById('tt-desc').textContent = d.description.length > 180 ? d.description.slice(0,180)+'…' : d.description;
+    document.getElementById('tt-units').textContent = d.units + ' unit' + (d.units !== 1 ? 's' : '');
+    document.getElementById('tt-dept').textContent = d.dept;
+    const inc = cy.edges(`[target = "${d.id}"][etype = "required"]`).length;
+    document.getElementById('tt-prereqs').textContent = inc + ' prereq' + (inc !== 1 ? 's' : '');
+    tooltip.style.display = 'block';
+  });
+  cy.on('mousemove', 'node', e => {
+    tooltip.style.left = (e.originalEvent.clientX + 16) + 'px';
+    tooltip.style.top  = (e.originalEvent.clientY - 10) + 'px';
+  });
+  cy.on('mouseout', 'node', () => { tooltip.style.display = 'none'; });
+
+  cy.on('tap', 'node', e => {
+    const nbhd = e.target.closedNeighborhood();
+    cy.elements().removeClass('highlighted faded');
+    cy.elements().not(nbhd).addClass('faded');
+    nbhd.addClass('highlighted');
+  });
+  cy.on('tap', e => {
+    if (e.target === cy) cy.elements().removeClass('highlighted faded');
+  });
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+function filterByDept(dept) {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  if (!dept) return;
+  const match = cy.nodes(`[dept = "${dept}"]`);
+  cy.nodes().not(match).addClass('faded');
+  cy.edges().each(e => { if (!match.has(e.source()) && !match.has(e.target())) e.addClass('faded'); });
+}
+
+function searchCourse(val) {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  if (!val.trim()) return;
+  const q = val.toLowerCase();
+  const matching = cy.nodes().filter(n =>
+    n.data('label').toLowerCase().includes(q) || n.data('title').toLowerCase().includes(q)
+  );
+  if (!matching.length) return;
+  cy.elements().not(matching.closedNeighborhood()).addClass('faded');
+  matching.closedNeighborhood().addClass('highlighted');
+  cy.animate({ fit: { eles: matching, padding: 80 }, duration: 400, easing: 'ease-in-out-cubic' });
+}
+
+function resetHighlight() {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  document.getElementById('dept-filter').value = '';
+  document.getElementById('search').value = '';
+}
+
+function changeLayout(name) {
+  if (!cy) return;
+  showLoading('COMPUTING LAYOUT...');
+  setTimeout(() => {
+    try {
+      cy.layout({
+        name,
+        animate: false,
+        padding: 50,
+        ...(name === 'breadthfirst' ? { directed: true, spacingFactor: 1.6, avoidOverlap: true } : {}),
+        ...(name === 'cose'         ? { idealEdgeLength: 80, nodeRepulsion: 6000, gravity: 0.3, numIter: 500 } : {}),
+        ...(name === 'grid'         ? { avoidOverlap: true, spacingFactor: 1.2 } : {}),
+        ...(name === 'circle'       ? { avoidOverlap: true } : {}),
+      }).run();
+    } catch(err) {
+      showError('Layout failed: ' + err.message);
+    } finally {
+      hideLoading();
+    }
+  }, 60);
+}
+</script>
+</body>
+</html>

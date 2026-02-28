@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Prerequisite Graph</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --border: #1e2330;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --glow: 0 0 20px rgba(0,229,255,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,12,16,0.9);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    white-space: nowrap;
+  }
+
+  .logo span { color: var(--text-muted); font-weight: 400; }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .upload-zone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+  .btn.primary { border-color: var(--accent); color: var(--accent); }
+  .btn.primary:hover { background: rgba(0,229,255,0.1); }
+
+  select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:hover, select:focus { border-color: var(--accent); }
+
+  .stat-chips {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+
+  .chip strong { color: var(--accent); }
+
+  #cy-container {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  #cy {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Drop overlay */
+  #drop-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    gap: 20px;
+    background: var(--bg);
+  }
+
+  .drop-box {
+    border: 2px dashed var(--border);
+    padding: 60px 80px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .drop-box:hover, .drop-box.drag-over {
+    border-color: var(--accent);
+    box-shadow: var(--glow), inset 0 0 40px rgba(0,229,255,0.04);
+  }
+
+  .drop-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .drop-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .drop-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  #file-input { display: none; }
+
+  .or-divider {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed;
+    display: none;
+    z-index: 100;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 14px 16px;
+    max-width: 320px;
+    box-shadow: var(--glow);
+    pointer-events: none;
+  }
+
+  .tt-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .tt-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .tt-desc {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .tt-meta {
+    display: flex;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+  }
+
+  .tt-tag {
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .tt-tag.units { border-color: rgba(124,58,237,0.5); color: #a78bfa; }
+
+  /* Legend */
+  #legend {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 50;
+    background: rgba(17,19,24,0.95);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    backdrop-filter: blur(8px);
+    display: none;
+  }
+
+  .legend-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .legend-line {
+    width: 24px;
+    height: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Search */
+  #search {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 7px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    outline: none;
+    width: 160px;
+    transition: all 0.2s;
+  }
+  #search:focus { border-color: var(--accent); width: 200px; }
+  #search::placeholder { color: var(--text-muted); }
+
+  .loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    z-index: 50;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    display: none;
+  }
+
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COURSE<span>GRAPH</span></div>
+
+  <div class="controls" id="controls" style="display:none">
+    <input type="text" id="search" placeholder="Search course..." oninput="searchCourse(this.value)">
+
+    <select id="dept-filter" onchange="filterByDept(this.value)">
+      <option value="">All Departments</option>
+    </select>
+
+    <select id="layout-select" onchange="changeLayout(this.value)">
+      <option value="dagre">Hierarchical (DAG)</option>
+      <option value="breadthfirst">Breadth-First</option>
+      <option value="cose">Force-Directed</option>
+      <option value="grid">Grid</option>
+      <option value="circle">Circular</option>
+    </select>
+
+    <button class="btn primary" onclick="cy.fit()">Fit View</button>
+    <button class="btn" onclick="resetHighlight()">Reset</button>
+    <button class="btn" onclick="document.getElementById('drop-overlay').style.display='flex'; document.getElementById('controls').style.display='none'; document.getElementById('legend').style.display='none';">Load New</button>
+  </div>
+
+  <div class="stat-chips" id="stats" style="display:none">
+    <div class="chip"><strong id="stat-nodes">0</strong> courses</div>
+    <div class="chip"><strong id="stat-edges">0</strong> prereqs</div>
+    <div class="chip"><strong id="stat-depts">0</strong> depts</div>
+  </div>
+</header>
+
+<div id="cy-container">
+  <div id="drop-overlay">
+    <div class="drop-box" id="drop-box" onclick="document.getElementById('file-input').click()"
+         ondragover="event.preventDefault(); this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="handleDrop(event)">
+      <div class="drop-icon">⬡</div>
+      <div class="drop-title">Drop your JSON file here</div>
+      <div class="drop-sub">Expects the university course schema format</div>
+      <button class="btn primary" onclick="event.stopPropagation(); document.getElementById('file-input').click()">Browse File</button>
+    </div>
+    <div class="or-divider">— OR LOAD DEMO DATA —</div>
+    <button class="btn" onclick="loadDemo()">Load Sample Graph</button>
+    <input type="file" id="file-input" accept=".json" onchange="loadFile(this)">
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    COMPUTING LAYOUT...
+  </div>
+
+  <div id="cy"></div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-code" id="tt-code"></div>
+  <div class="tt-title" id="tt-title"></div>
+  <div class="tt-desc" id="tt-desc"></div>
+  <div class="tt-meta">
+    <span class="tt-tag units" id="tt-units"></span>
+    <span class="tt-tag" id="tt-dept"></span>
+    <span class="tt-tag" id="tt-prereq-count"></span>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="legend-title">Legend</div>
+  <div id="legend-depts"></div>
+  <div style="margin-top:10px">
+    <div class="legend-item">
+      <div class="legend-line" style="background: rgba(0,229,255,0.7);"></div>
+      <span>Required prereq</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background: rgba(255,107,53,0.7); border-top: 2px dashed rgba(255,107,53,0.7); height:0;"></div>
+      <span>Concurrent</span>
+    </div>
+  </div>
+</div>
+
+<!-- Dagre layout extension -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-dagre/2.5.0/cytoscape-dagre.min.js"></script>
+
+<script>
+let cy = null;
+let allData = null;
+
+// Department color palette
+const DEPT_COLORS = [
+  '#00e5ff','#ff6b35','#7c3aed','#10b981','#f59e0b',
+  '#ec4899','#3b82f6','#84cc16','#f97316','#06b6d4',
+  '#8b5cf6','#ef4444','#14b8a6','#a855f7','#22c55e'
+];
+
+let deptColorMap = {};
+
+function getDeptColor(dept) {
+  if (!deptColorMap[dept]) {
+    const keys = Object.keys(deptColorMap);
+    deptColorMap[dept] = DEPT_COLORS[keys.length % DEPT_COLORS.length];
+  }
+  return deptColorMap[dept];
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('drop-box').classList.remove('drag-over');
+  const file = event.dataTransfer.files[0];
+  if (file) readFile(file);
+}
+
+function loadFile(input) {
+  if (input.files[0]) readFile(input.files[0]);
+}
+
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      buildGraph(data);
+    } catch(err) {
+      alert('Invalid JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function loadDemo() {
+  // Generate sample data
+  const demo = {
+    meta: { departments: ['CMPSC','MATH','ECE'], total_courses: 18 },
+    courses: [
+      { id:'MATH 3A', code:'MATH 3A', title:'Calculus I', department:'MATH', units:4, description:'Introduction to differential calculus.', prereqs:{required:[],concurrent:[]}, catalog_url:'#' },
+      { id:'MATH 3B', code:'MATH 3B', title:'Calculus II', department:'MATH', units:4, description:'Integral calculus and series.', prereqs:{required:[['MATH 3A']],concurrent:[]}, catalog_url:'#' },
+      { id:'MATH 4A', code:'MATH 4A', title:'Linear Algebra', department:'MATH', units:4, description:'Matrices and vector spaces.', prereqs:{required:[['MATH 3A']],concurrent:[]}, catalog_url:'#' },
+      { id:'MATH 6A', code:'MATH 6A', title:'Differential Equations', department:'MATH', units:3, description:'Ordinary differential equations.', prereqs:{required:[['MATH 3B']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 1', code:'CMPSC 1', title:'Seminar on CS', department:'CMPSC', units:1, description:'Overview of computer science.', prereqs:{required:[],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 2', code:'CMPSC 2', title:'Computational Thinking', department:'CMPSC', units:4, description:'CS concepts for scientists.', prereqs:{required:[['MATH 4A']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 8', code:'CMPSC 8', title:'Intro to CS 1', department:'CMPSC', units:4, description:'Introduction to programming.', prereqs:{required:[],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 16', code:'CMPSC 16', title:'Problem Solving I', department:'CMPSC', units:4, description:'Programming fundamentals.', prereqs:{required:[['CMPSC 8']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 24', code:'CMPSC 24', title:'Problem Solving II', department:'CMPSC', units:4, description:'Data structures.', prereqs:{required:[['CMPSC 16'],['MATH 3A']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 32', code:'CMPSC 32', title:'Object Oriented Design', department:'CMPSC', units:4, description:'OOP principles.', prereqs:{required:[['CMPSC 24']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 40', code:'CMPSC 40', title:'Foundations of CS', department:'CMPSC', units:4, description:'Logic and automata.', prereqs:{required:[['CMPSC 16'],['MATH 3B']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 64', code:'CMPSC 64', title:'Computer Organization', department:'CMPSC', units:4, description:'Computer architecture basics.', prereqs:{required:[['CMPSC 16']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 130A', code:'CMPSC 130A', title:'Data Structures & Algorithms I', department:'CMPSC', units:4, description:'Advanced data structures.', prereqs:{required:[['CMPSC 32'],['CMPSC 40']],concurrent:[]}, catalog_url:'#' },
+      { id:'CMPSC 130B', code:'CMPSC 130B', title:'Data Structures & Algorithms II', department:'CMPSC', units:4, description:'Algorithm design and analysis.', prereqs:{required:[['CMPSC 130A']],concurrent:[]}, catalog_url:'#' },
+      { id:'ECE 1A', code:'ECE 1A', title:'Intro to Electrical Engineering', department:'ECE', units:2, description:'Basic ECE concepts.', prereqs:{required:[],concurrent:[]}, catalog_url:'#' },
+      { id:'ECE 2', code:'ECE 2', title:'Signal Analysis', department:'ECE', units:4, description:'Signals and systems.', prereqs:{required:[['MATH 3B'],['ECE 1A']],concurrent:[]}, catalog_url:'#' },
+      { id:'ECE 15', code:'ECE 15', title:'Engineering Computation', department:'ECE', units:4, description:'Programming for ECE.', prereqs:{required:[['MATH 3A']],concurrent:[]}, catalog_url:'#' },
+      { id:'ECE 130A', code:'ECE 130A', title:'Device Electronics I', department:'ECE', units:4, description:'Electronic devices.', prereqs:{required:[['ECE 2'],['MATH 6A']],concurrent:[]}, catalog_url:'#' },
+    ]
+  };
+  buildGraph(demo);
+}
+
+function buildGraph(data) {
+  allData = data;
+  deptColorMap = {};
+  document.getElementById('drop-overlay').style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+
+  // Allow UI to update before heavy computation
+  setTimeout(() => {
+    _buildGraph(data);
+  }, 50);
+}
+
+function _buildGraph(data) {
+  const courses = data.courses || [];
+  const courseIds = new Set(courses.map(c => c.id));
+
+  // Build elements
+  const elements = [];
+
+  courses.forEach(c => {
+    elements.push({
+      data: {
+        id: c.id,
+        label: c.code,
+        title: c.title,
+        dept: c.department,
+        units: c.units,
+        description: c.description,
+        url: c.catalog_url
+      },
+      classes: ['course', c.department]
+    });
+  });
+
+  courses.forEach(c => {
+    // Required prereqs
+    (c.prereqs?.required || []).forEach((group, gi) => {
+      group.forEach((prereqId) => {
+        if (courseIds.has(prereqId)) {
+          elements.push({
+            data: {
+              id: `${prereqId}->${c.id}-req-${gi}`,
+              source: prereqId,
+              target: c.id,
+              type: 'required'
+            },
+            classes: ['required-edge']
+          });
+        }
+      });
+    });
+
+    // Concurrent
+    (c.prereqs?.concurrent || []).forEach((prereqId) => {
+      if (courseIds.has(prereqId)) {
+        elements.push({
+          data: {
+            id: `${prereqId}->${c.id}-conc`,
+            source: prereqId,
+            target: c.id,
+            type: 'concurrent'
+          },
+          classes: ['concurrent-edge']
+        });
+      }
+    });
+  });
+
+  // Populate dept filter
+  const depts = [...new Set(courses.map(c => c.department))].sort();
+  depts.forEach(d => getDeptColor(d)); // init colors
+
+  const deptSelect = document.getElementById('dept-filter');
+  deptSelect.innerHTML = '<option value="">All Departments</option>';
+  depts.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    deptSelect.appendChild(opt);
+  });
+
+  // Build legend
+  const legendDepts = document.getElementById('legend-depts');
+  legendDepts.innerHTML = '';
+  depts.forEach(d => {
+    const color = getDeptColor(d);
+    legendDepts.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${color}"></div>
+        <span>${d}</span>
+      </div>`;
+  });
+
+  // Stats
+  document.getElementById('stat-nodes').textContent = courses.length;
+  document.getElementById('stat-edges').textContent = elements.filter(e => e.data.source).length;
+  document.getElementById('stat-depts').textContent = depts.length;
+
+  // Build style array
+  const nodeStyles = depts.map(d => ({
+    selector: `.${d}`,
+    style: { 'background-color': getDeptColor(d) }
+  }));
+
+  if (cy) { cy.destroy(); }
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)',
+          'font-family': 'JetBrains Mono, monospace',
+          'font-size': '9px',
+          'font-weight': '600',
+          'color': '#0a0c10',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'width': 'label',
+          'height': 'label',
+          'padding': '8px',
+          'shape': 'round-rectangle',
+          'border-width': 0,
+          'transition-property': 'background-color, border-width, opacity',
+          'transition-duration': '0.15s',
+        }
+      },
+      ...nodeStyles,
+      {
+        selector: 'node:selected',
+        style: {
+          'border-width': 2,
+          'border-color': '#ffffff',
+          'z-index': 10
+        }
+      },
+      {
+        selector: '.highlighted',
+        style: { 'border-width': 2, 'border-color': '#ffffff', 'z-index': 10, opacity: 1 }
+      },
+      {
+        selector: '.faded',
+        style: { opacity: 0.15 }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 1.5,
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier',
+          'arrow-scale': 0.8,
+        }
+      },
+      {
+        selector: '.required-edge',
+        style: {
+          'line-color': 'rgba(0,229,255,0.5)',
+          'target-arrow-color': 'rgba(0,229,255,0.5)',
+        }
+      },
+      {
+        selector: '.concurrent-edge',
+        style: {
+          'line-color': 'rgba(255,107,53,0.5)',
+          'target-arrow-color': 'rgba(255,107,53,0.5)',
+          'line-style': 'dashed',
+          'line-dash-pattern': [6, 3],
+        }
+      },
+      {
+        selector: 'edge.highlighted',
+        style: {
+          'width': 2.5,
+          opacity: 1,
+          'z-index': 5
+        }
+      },
+      {
+        selector: '.required-edge.highlighted',
+        style: { 'line-color': 'rgba(0,229,255,1)', 'target-arrow-color': 'rgba(0,229,255,1)' }
+      },
+      {
+        selector: '.concurrent-edge.highlighted',
+        style: { 'line-color': 'rgba(255,107,53,1)', 'target-arrow-color': 'rgba(255,107,53,1)' }
+      }
+    ],
+    layout: {
+      name: 'dagre',
+      rankDir: 'TB',
+      nodeSep: 30,
+      rankSep: 60,
+      edgeSep: 10,
+      padding: 40,
+    }
+  });
+
+  // Tooltip on hover
+  const tooltip = document.getElementById('tooltip');
+  cy.on('mouseover', 'node', e => {
+    const d = e.target.data();
+    document.getElementById('tt-code').textContent = d.label;
+    document.getElementById('tt-title').textContent = d.title;
+    document.getElementById('tt-desc').textContent = d.description ? (d.description.length > 160 ? d.description.slice(0,160)+'…' : d.description) : '';
+    document.getElementById('tt-units').textContent = d.units + ' unit' + (d.units !== 1 ? 's' : '');
+    document.getElementById('tt-dept').textContent = d.dept;
+    const prereqEdges = cy.edges(`[target = "${d.id}"][type = "required"]`).length;
+    document.getElementById('tt-prereq-count').textContent = prereqEdges + ' prerequisite' + (prereqEdges !== 1 ? 's' : '');
+    tooltip.style.display = 'block';
+  });
+  cy.on('mousemove', 'node', e => {
+    tooltip.style.left = (e.originalEvent.clientX + 16) + 'px';
+    tooltip.style.top = (e.originalEvent.clientY - 10) + 'px';
+  });
+  cy.on('mouseout', 'node', () => { tooltip.style.display = 'none'; });
+
+  // Highlight neighborhood on click
+  cy.on('tap', 'node', e => {
+    const node = e.target;
+    cy.elements().removeClass('highlighted faded');
+    const neighborhood = node.closedNeighborhood();
+    cy.elements().not(neighborhood).addClass('faded');
+    neighborhood.addClass('highlighted');
+  });
+
+  cy.on('tap', e => {
+    if (e.target === cy) {
+      cy.elements().removeClass('highlighted faded');
+    }
+  });
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('stats').style.display = 'flex';
+  document.getElementById('legend').style.display = 'block';
+}
+
+function filterByDept(dept) {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  if (!dept) return;
+  const matching = cy.nodes(`[dept = "${dept}"]`);
+  const notMatching = cy.nodes().not(matching);
+  notMatching.addClass('faded');
+  // also fade edges not touching matching nodes
+  cy.edges().each(e => {
+    if (!matching.has(e.source()) && !matching.has(e.target())) {
+      e.addClass('faded');
+    }
+  });
+}
+
+function resetHighlight() {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  document.getElementById('dept-filter').value = '';
+  document.getElementById('search').value = '';
+}
+
+function searchCourse(val) {
+  if (!cy) return;
+  cy.elements().removeClass('highlighted faded');
+  if (!val.trim()) return;
+  const q = val.toLowerCase();
+  const matching = cy.nodes().filter(n =>
+    n.data('label').toLowerCase().includes(q) ||
+    n.data('title').toLowerCase().includes(q)
+  );
+  if (matching.length === 0) return;
+  cy.elements().not(matching.closedNeighborhood()).addClass('faded');
+  matching.closedNeighborhood().addClass('highlighted');
+  cy.animate({ fit: { eles: matching, padding: 80 }, duration: 400, easing: 'ease-in-out-cubic' });
+}
+
+function changeLayout(name) {
+  if (!cy) return;
+  document.getElementById('loading').style.display = 'flex';
+  setTimeout(() => {
+    let opts = { name, padding: 40, animate: true, animationDuration: 600 };
+    if (name === 'dagre') {
+      opts = { ...opts, rankDir: 'TB', nodeSep: 30, rankSep: 60 };
+    } else if (name === 'cose') {
+      opts = { ...opts, idealEdgeLength: 100, nodeRepulsion: 8000, gravity: 0.25 };
+    } else if (name === 'breadthfirst') {
+      opts = { ...opts, directed: true, spacingFactor: 1.4 };
+    }
+    const layout = cy.layout(opts);
+    layout.on('layoutstop', () => { document.getElementById('loading').style.display = 'none'; });
+    layout.run();
+  }, 50);
+}
+</script>
+</body>
+</html>
