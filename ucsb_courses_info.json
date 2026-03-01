@@ -2486,15 +2486,7 @@
       "prereqs": {
         "required": [
           [
-            "ECE 15A"
-          ],
-          [
-            "ECE 2A",
-            "ECE 10A",
-            "ECE 10AL"
-          ],
-          [
-            "CMPSC 30",
+            "ECE 15A and ECE 10A and ECE 10AL", 
             "CMPSC 64"
           ]
         ],
