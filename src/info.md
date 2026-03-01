@@ -9,4 +9,4 @@ All files in [`src/`](src/) besides [`info.md`](info.md) and [`parser/prereq_jso
 [`viz/`](viz/) contains various iterations of files that were used to visualize all courses and their prerequisites.
 
 
-[`mvp_course_dag.html`](../mvp_course_dag.html) and [`final_course_dag.html`](../final_course_dag.html) are actually just [`viz/viz8.html`](viz/viz8.html) and [`viz/viz11.html`](viz/viz11.html). 
+[`mvp_course_dag.html`](../mvp_course_dag.html) and [`final_course_dag.html`](../final_course_dag.html) are actually just [`viz/viz8.html`](viz/viz8.html) and [`viz/viz11.html`](viz/viz11.html) (but slightly modified). 
